@@ -4,17 +4,17 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts as usePoppinsFonts, Poppins_600SemiBold, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import { useFonts as useDmSansFonts, DMSans_400Regular, DMSans_500Medium } from '@expo-google-fonts/dm-sans';
 
 import '@/i18n';
 import { colors } from '@/constants/theme';
 import { useAuthSession } from '@/hooks/useAuthSession';
+import { OfflineSyncProvider } from '@/providers/OfflineSyncProvider';
+import { queryClient } from '@/services/queryClient';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
-
-const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const [poppinsLoaded] = usePoppinsFonts({ Poppins_600SemiBold, Poppins_700Bold });
@@ -40,10 +40,12 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
-        <View style={{ flex: 1, backgroundColor: colors.background }}>
-          <StatusBar style="light" />
-          <Stack screenOptions={{ headerShown: false }} />
-        </View>
+        <OfflineSyncProvider>
+          <View style={{ flex: 1, backgroundColor: colors.background }}>
+            <StatusBar style="light" />
+            <Stack screenOptions={{ headerShown: false }} />
+          </View>
+        </OfflineSyncProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
   );

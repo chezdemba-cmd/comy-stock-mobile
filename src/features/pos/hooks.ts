@@ -1,6 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useCompanyStore } from '@/stores/companyStore';
+import { useSyncQueueStore } from '@/stores/syncQueueStore';
+import type { Sale } from '@/types/database';
 import {
   addCashMovement,
   closeCashSession,
@@ -10,6 +13,8 @@ import {
   openCashSession,
   type CreateSaleInput,
 } from './api';
+
+export type CreateSaleResult = { status: 'synced'; sale: Sale } | { status: 'queued'; queueId: string };
 
 function useActiveScope() {
   const companyId = useCompanyStore((state) => state.activeCompanyId);
@@ -55,12 +60,22 @@ export function useCloseCashSession() {
 export function useAddCashMovement() {
   const queryClient = useQueryClient();
   const { companyId, shopId } = useActiveScope();
+  const { isOnline } = useNetworkStatus();
+  const enqueue = useSyncQueueStore((state) => state.enqueue);
 
   return useMutation({
-    mutationFn: (input: { sessionId: string; type: 'in' | 'out'; amount: number; reason: string }) =>
-      addCashMovement({ companyId: companyId as string, shopId: shopId as string, ...input }),
+    mutationFn: async (input: { sessionId: string; type: 'in' | 'out'; amount: number; reason: string }) => {
+      const payload = { companyId: companyId as string, shopId: shopId as string, ...input };
+      if (!isOnline) {
+        enqueue({ type: 'addCashMovement', payload });
+        return;
+      }
+      await addCashMovement(payload);
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cashSession', shopId] });
+      if (isOnline) {
+        queryClient.invalidateQueries({ queryKey: ['cashSession', shopId] });
+      }
     },
   });
 }
@@ -68,12 +83,23 @@ export function useAddCashMovement() {
 export function useCreateSale() {
   const queryClient = useQueryClient();
   const { companyId, shopId } = useActiveScope();
+  const { isOnline } = useNetworkStatus();
+  const enqueue = useSyncQueueStore((state) => state.enqueue);
 
   return useMutation({
-    mutationFn: (input: CreateSaleInput) => createSale(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products', companyId, shopId] });
-      queryClient.invalidateQueries({ queryKey: ['cashSession', shopId] });
+    mutationFn: async (input: CreateSaleInput): Promise<CreateSaleResult> => {
+      if (!isOnline) {
+        const item = enqueue({ type: 'createSale', payload: input });
+        return { status: 'queued', queueId: item.id };
+      }
+      const sale = await createSale(input);
+      return { status: 'synced', sale };
+    },
+    onSuccess: (result) => {
+      if (result.status === 'synced') {
+        queryClient.invalidateQueries({ queryKey: ['products', companyId, shopId] });
+        queryClient.invalidateQueries({ queryKey: ['cashSession', shopId] });
+      }
     },
   });
 }

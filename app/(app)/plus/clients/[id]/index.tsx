@@ -14,6 +14,7 @@ import {
   useCustomerStats,
   usePayCustomerDebt,
 } from '@/features/customers/hooks';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useCompanyStore } from '@/stores/companyStore';
 import { buildDebtReminderMessage, buildWhatsAppUrl } from '@/utils/whatsapp';
 import { formatMoney } from '@/utils/money';
@@ -31,6 +32,7 @@ export default function ClientDetailScreen() {
   const shopName = memberships?.shops.find((shop) => shop.id === activeShopId)?.name ?? 'la boutique';
 
   const payDebt = usePayCustomerDebt(id as string);
+  const { isOnline } = useNetworkStatus();
   const [isPayOpen, setIsPayOpen] = useState(false);
   const [payAmount, setPayAmount] = useState('');
   const [payError, setPayError] = useState<string | null>(null);
@@ -45,6 +47,7 @@ export default function ClientDetailScreen() {
     const value = Number(payAmount);
     if (!value || value <= 0) return;
     try {
+      if (!isOnline) throw new Error('Connexion requise pour cette action.');
       await payDebt.mutateAsync(value);
       setIsPayOpen(false);
       setPayAmount('');

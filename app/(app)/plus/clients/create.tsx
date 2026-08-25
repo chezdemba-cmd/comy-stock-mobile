@@ -9,10 +9,12 @@ import { ClientForm } from '@/components/ClientForm';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { useCreateCustomerFull } from '@/features/customers/hooks';
 import { customerFormSchema, type CustomerFormValues } from '@/features/customers/schemas';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { colors, spacing, typography } from '@/constants/theme';
 
 export default function CreateClientScreen() {
   const { mutateAsync, isPending } = useCreateCustomerFull();
+  const { isOnline } = useNetworkStatus();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
@@ -27,6 +29,7 @@ export default function CreateClientScreen() {
   const onSubmit = async (values: CustomerFormValues) => {
     setSubmitError(null);
     try {
+      if (!isOnline) throw new Error('Connexion requise pour cette action.');
       await mutateAsync({
         name: values.name,
         phone: values.phone ?? '',

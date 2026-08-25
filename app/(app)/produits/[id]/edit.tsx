@@ -11,6 +11,7 @@ import { useMyMemberships } from '@/features/company/hooks';
 import { uploadProductPhoto } from '@/features/products/api';
 import { useProduct, useUpdateProduct } from '@/features/products/hooks';
 import { productFormSchema, type ProductFormValues } from '@/features/products/schemas';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { usePickImage } from '@/hooks/usePickImage';
 import type { ProductWithStock } from '@/features/products/api';
 import { useCompanyStore } from '@/stores/companyStore';
@@ -38,6 +39,7 @@ function EditProductForm({ product }: { product: ProductWithStock }) {
   const [existingPhotoUrl] = useState<string | null>(product.photo_url);
   const { localUri, pendingUpload, pick } = usePickImage();
   const { mutateAsync, isPending } = useUpdateProduct(product.id);
+  const { isOnline } = useNetworkStatus();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
@@ -63,6 +65,7 @@ function EditProductForm({ product }: { product: ProductWithStock }) {
     if (!activeCompanyId) return;
     setSubmitError(null);
     try {
+      if (!isOnline) throw new Error('Connexion requise pour cette action.');
       let photoUrl = existingPhotoUrl;
       if (pendingUpload && localUri) {
         photoUrl = await uploadProductPhoto(activeCompanyId, localUri);

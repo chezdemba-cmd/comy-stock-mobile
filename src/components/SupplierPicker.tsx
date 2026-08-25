@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { colors, radii, spacing, typography } from '@/constants/theme';
 import { useCreateSupplier, useSuppliers } from '@/features/suppliers/hooks';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 
 interface SupplierPickerProps {
   value: string | null;
@@ -14,10 +15,12 @@ interface SupplierPickerProps {
 export function SupplierPicker({ value, onChange, required = false }: SupplierPickerProps) {
   const { data: suppliers = [] } = useSuppliers();
   const createSupplier = useCreateSupplier();
+  const { isOnline } = useNetworkStatus();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const selected = suppliers.find((supplier) => supplier.id === value);
   const filtered = suppliers.filter((supplier) =>
@@ -26,6 +29,11 @@ export function SupplierPicker({ value, onChange, required = false }: SupplierPi
 
   const handleCreate = async () => {
     if (!newName.trim()) return;
+    if (!isOnline) {
+      setError('Connexion requise pour cette action.');
+      return;
+    }
+    setError(null);
     const supplier = await createSupplier.mutateAsync({
       name: newName.trim(),
       phone: newPhone.trim(),
@@ -98,6 +106,7 @@ export function SupplierPicker({ value, onChange, required = false }: SupplierPi
                 keyboardType="phone-pad"
                 style={styles.searchInput}
               />
+              {error ? <Text style={styles.clear}>{error}</Text> : null}
               <Pressable style={styles.createButton} onPress={handleCreate}>
                 <Text style={styles.createButtonLabel}>Créer et sélectionner</Text>
               </Pressable>

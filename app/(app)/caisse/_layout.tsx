@@ -17,6 +17,7 @@ export default function CaisseLayout() {
       <Stack.Screen name="cart" options={{ title: 'Panier' }} />
       <Stack.Screen name="payment" options={{ title: 'Paiement' }} />
       <Stack.Screen name="receipt" options={{ title: 'Reçu', headerBackVisible: false }} />
+      <Stack.Screen name="receipt-pending" options={{ title: 'Reçu', headerBackVisible: false }} />
       <Stack.Screen name="register" options={{ title: 'Caisse' }} />
       <Stack.Screen name="closing" options={{ title: 'Clôture de caisse' }} />
     </Stack>

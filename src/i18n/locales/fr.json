@@ -54,5 +54,27 @@
     "comingSoon": "Bientôt disponible",
     "comingSoonDetail": "Cet écran sera construit dans une prochaine phase.",
     "logout": "Se déconnecter"
+  },
+  "offline": {
+    "banner": "Hors ligne — les données affichées peuvent être obsolètes.",
+    "pendingCount_one": "{{count}} opération en attente de synchronisation",
+    "pendingCount_other": "{{count}} opérations en attente de synchronisation",
+    "actionRequiresConnection": "Connexion requise pour cette action.",
+    "queueTitle": "Synchronisation",
+    "queueEmpty": "Aucune opération en attente.",
+    "queueHint": "La synchronisation se relance automatiquement dès que la connexion est rétablie.",
+    "syncNow": "Synchroniser maintenant",
+    "queueStatusPending": "En attente",
+    "queueStatusSyncing": "Synchronisation…",
+    "queueStatusError": "Échec",
+    "retry": "Réessayer",
+    "discard": "Ignorer",
+    "typeCreateSale": "Vente",
+    "typeAddCashMovement": "Mouvement de caisse",
+    "typeCreateExpense": "Dépense",
+    "typeAdjustStock": "Correction de stock",
+    "receiptPendingTitle": "Vente enregistrée localement",
+    "receiptPendingDetail": "Cette vente sera finalisée dès que la connexion sera rétablie.",
+    "receiptPendingBack": "Retour à la caisse"
   }
 }

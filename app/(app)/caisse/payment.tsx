@@ -78,7 +78,7 @@ export default function PaymentScreen() {
     if (!activeCompanyId || !activeShopId) return;
 
     try {
-      const sale = await createSale.mutateAsync({
+      const result = await createSale.mutateAsync({
         companyId: activeCompanyId,
         shopId: activeShopId,
         customerId,
@@ -92,7 +92,11 @@ export default function PaymentScreen() {
       });
 
       clearCart();
-      router.replace({ pathname: '/(app)/caisse/receipt', params: { saleId: sale.id } });
+      if (result.status === 'synced') {
+        router.replace({ pathname: '/(app)/caisse/receipt', params: { saleId: result.sale.id } });
+      } else {
+        router.replace({ pathname: '/(app)/caisse/receipt-pending', params: { queueId: result.queueId } });
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue.');
     }

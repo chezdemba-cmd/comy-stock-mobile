@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { colors, radii, spacing, typography } from '@/constants/theme';
 import { useCategories, useCreateCategory } from '@/features/products/hooks';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 
 interface CategoryPickerProps {
   value: string | null;
@@ -13,8 +14,10 @@ interface CategoryPickerProps {
 export function CategoryPicker({ value, onChange }: CategoryPickerProps) {
   const { data: categories = [] } = useCategories();
   const createCategory = useCreateCategory();
+  const { isOnline } = useNetworkStatus();
   const [isAdding, setIsAdding] = useState(false);
   const [draftName, setDraftName] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const handleConfirmAdd = async () => {
     const name = draftName.trim();
@@ -22,6 +25,11 @@ export function CategoryPicker({ value, onChange }: CategoryPickerProps) {
       setIsAdding(false);
       return;
     }
+    if (!isOnline) {
+      setError('Connexion requise pour cette action.');
+      return;
+    }
+    setError(null);
     const category = await createCategory.mutateAsync(name);
     onChange(category.id);
     setDraftName('');
@@ -68,6 +76,7 @@ export function CategoryPicker({ value, onChange }: CategoryPickerProps) {
           </Pressable>
         )}
       </View>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
   );
 }
@@ -132,5 +141,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  error: {
+    color: colors.danger,
+    fontFamily: typography.fontBody,
+    fontSize: 12,
+    marginTop: spacing.sm,
   },
 });

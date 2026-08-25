@@ -11,6 +11,7 @@ import { colors, radii, spacing, typography } from '@/constants/theme';
 import { useMyMemberships } from '@/features/company/hooks';
 import { useProducts } from '@/features/products/hooks';
 import { useCreatePurchase } from '@/features/suppliers/hooks';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useCompanyStore } from '@/stores/companyStore';
 import { formatMoney } from '@/utils/money';
 
@@ -37,6 +38,7 @@ export default function CreatePurchaseScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const createPurchase = useCreatePurchase();
+  const { isOnline } = useNetworkStatus();
 
   const total = lines.reduce((sum, line) => sum + (Number(line.quantity) || 0) * (Number(line.unitCost) || 0), 0);
 
@@ -73,6 +75,7 @@ export default function CreatePurchaseScreen() {
     }
 
     try {
+      if (!isOnline) throw new Error('Connexion requise pour cette action.');
       await createPurchase.mutateAsync({
         companyId: activeCompanyId,
         shopId: activeShopId,

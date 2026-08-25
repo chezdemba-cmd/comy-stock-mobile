@@ -8,6 +8,7 @@ import { TextField } from '@/components/TextField';
 import { colors, radii, spacing, typography } from '@/constants/theme';
 import { useMyMemberships } from '@/features/company/hooks';
 import { useCloseCashSession, useOpenSession } from '@/features/pos/hooks';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useCompanyStore } from '@/stores/companyStore';
 import { formatMoney } from '@/utils/money';
 import type { CashRegisterSession } from '@/types/database';
@@ -20,6 +21,7 @@ export default function ClosingScreen() {
     memberships?.companies.find((company) => company.id === activeCompanyId)?.currency ?? 'XOF';
 
   const closeSession = useCloseCashSession();
+  const { isOnline } = useNetworkStatus();
   const [closingReal, setClosingReal] = useState('');
   const [notes, setNotes] = useState('');
   const [result, setResult] = useState<CashRegisterSession | null>(null);
@@ -33,6 +35,7 @@ export default function ClosingScreen() {
     if (!session) return;
     setError(null);
     try {
+      if (!isOnline) throw new Error('Connexion requise pour cette action.');
       const closed = await closeSession.mutateAsync({
         sessionId: session.id,
         closingReal: Number(closingReal) || 0,

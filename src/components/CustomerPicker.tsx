@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { colors, radii, spacing, typography } from '@/constants/theme';
 import { useCreateCustomer, useCustomers } from '@/features/customers/hooks';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 
 interface CustomerPickerProps {
   value: string | null;
@@ -14,10 +15,12 @@ interface CustomerPickerProps {
 export function CustomerPicker({ value, onChange, required = false }: CustomerPickerProps) {
   const { data: customers = [] } = useCustomers();
   const createCustomer = useCreateCustomer();
+  const { isOnline } = useNetworkStatus();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const selected = customers.find((customer) => customer.id === value);
   const filtered = customers.filter((customer) =>
@@ -26,6 +29,11 @@ export function CustomerPicker({ value, onChange, required = false }: CustomerPi
 
   const handleCreate = async () => {
     if (!newName.trim()) return;
+    if (!isOnline) {
+      setError('Connexion requise pour cette action.');
+      return;
+    }
+    setError(null);
     const customer = await createCustomer.mutateAsync({ name: newName.trim(), phone: newPhone.trim() });
     onChange(customer.id);
     setNewName('');
@@ -92,6 +100,7 @@ export function CustomerPicker({ value, onChange, required = false }: CustomerPi
                 keyboardType="phone-pad"
                 style={styles.searchInput}
               />
+              {error ? <Text style={styles.clear}>{error}</Text> : null}
               <Pressable style={styles.createButton} onPress={handleCreate}>
                 <Text style={styles.createButtonLabel}>Créer et sélectionner</Text>
               </Pressable>

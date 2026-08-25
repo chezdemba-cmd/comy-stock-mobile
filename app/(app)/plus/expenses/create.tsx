@@ -13,6 +13,7 @@ import { colors, radii, spacing, typography } from '@/constants/theme';
 import { useCreateExpense } from '@/features/expenses/hooks';
 import { uploadExpenseReceipt } from '@/features/expenses/api';
 import { expenseCategoryOptions, expenseFormSchema, type ExpenseFormValues } from '@/features/expenses/schemas';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { usePickImage } from '@/hooks/usePickImage';
 import { useCompanyStore } from '@/stores/companyStore';
 import type { ExpenseCategory } from '@/types/database';
@@ -20,6 +21,7 @@ import type { ExpenseCategory } from '@/types/database';
 export default function CreateExpenseScreen() {
   const activeCompanyId = useCompanyStore((state) => state.activeCompanyId);
   const { mutateAsync, isPending } = useCreateExpense();
+  const { isOnline } = useNetworkStatus();
   const { localUri, pendingUpload, pick } = usePickImage();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -37,7 +39,7 @@ export default function CreateExpenseScreen() {
     setSubmitError(null);
     try {
       let receiptPhotoUrl: string | null = null;
-      if (pendingUpload && localUri) {
+      if (pendingUpload && localUri && isOnline) {
         receiptPhotoUrl = await uploadExpenseReceipt(activeCompanyId, localUri);
       }
 
@@ -116,6 +118,11 @@ export default function CreateExpenseScreen() {
               </View>
             )}
           </Pressable>
+          {!isOnline && pendingUpload ? (
+            <Text style={styles.photoOfflineNotice}>
+              La photo ne sera pas envoyée hors ligne — la dépense sera enregistrée sans justificatif.
+            </Text>
+          ) : null}
 
           {submitError ? <Text style={styles.formError}>{submitError}</Text> : null}
 
@@ -167,5 +174,11 @@ const styles = StyleSheet.create({
     fontFamily: typography.fontBody,
     fontSize: 14,
     marginBottom: spacing.md,
+  },
+  photoOfflineNotice: {
+    color: colors.warning,
+    fontFamily: typography.fontBody,
+    fontSize: 12,
+    marginBottom: spacing.lg,
   },
 });

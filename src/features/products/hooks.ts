@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useCompanyStore } from '@/stores/companyStore';
+import { useSyncQueueStore } from '@/stores/syncQueueStore';
 import {
   adjustStock,
   createCategory,
@@ -105,14 +107,29 @@ export function useDeleteProduct() {
 export function useAdjustStock(productId: string) {
   const queryClient = useQueryClient();
   const { companyId, shopId } = useActiveScope();
+  const { isOnline } = useNetworkStatus();
+  const enqueue = useSyncQueueStore((state) => state.enqueue);
 
   return useMutation({
-    mutationFn: (input: Omit<AdjustStockInput, 'companyId' | 'shopId' | 'productId'>) =>
-      adjustStock({ ...input, companyId: companyId as string, shopId: shopId as string, productId }),
+    mutationFn: async (input: Omit<AdjustStockInput, 'companyId' | 'shopId' | 'productId'>) => {
+      const payload: AdjustStockInput = {
+        ...input,
+        companyId: companyId as string,
+        shopId: shopId as string,
+        productId,
+      };
+      if (!isOnline) {
+        enqueue({ type: 'adjustStock', payload });
+        return;
+      }
+      await adjustStock(payload);
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products', companyId, shopId] });
-      queryClient.invalidateQueries({ queryKey: ['product', productId, shopId] });
-      queryClient.invalidateQueries({ queryKey: ['stockMovements', productId, shopId] });
+      if (isOnline) {
+        queryClient.invalidateQueries({ queryKey: ['products', companyId, shopId] });
+        queryClient.invalidateQueries({ queryKey: ['product', productId, shopId] });
+        queryClient.invalidateQueries({ queryKey: ['stockMovements', productId, shopId] });
+      }
     },
   });
 }

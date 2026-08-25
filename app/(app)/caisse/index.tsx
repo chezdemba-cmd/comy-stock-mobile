@@ -11,6 +11,7 @@ import { colors, radii, spacing, typography } from '@/constants/theme';
 import { useMyMemberships } from '@/features/company/hooks';
 import { useProducts } from '@/features/products/hooks';
 import { useOpenCashSession, useOpenSession } from '@/features/pos/hooks';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useCartStore, cartSubtotal } from '@/stores/cartStore';
 import { useCompanyStore } from '@/stores/companyStore';
 import { formatMoney } from '@/utils/money';
@@ -26,11 +27,13 @@ export default function CaisseScreen() {
 function OpenSessionScreen() {
   const [amount, setAmount] = useState('0');
   const openSession = useOpenCashSession();
+  const { isOnline } = useNetworkStatus();
   const [error, setError] = useState<string | null>(null);
 
   const onOpen = async () => {
     setError(null);
     try {
+      if (!isOnline) throw new Error('Connexion requise pour cette action.');
       await openSession.mutateAsync(Number(amount) || 0);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue.');

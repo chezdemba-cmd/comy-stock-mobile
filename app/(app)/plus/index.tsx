@@ -14,6 +14,7 @@ const MENU_ITEMS = [
   { label: 'Fournisseurs', icon: 'briefcase-outline' as const, href: '/(app)/plus/suppliers' as const },
   { label: 'Dépenses', icon: 'wallet-outline' as const, href: '/(app)/plus/expenses' as const },
   { label: 'Rapports', icon: 'bar-chart-outline' as const, href: '/(app)/plus/reports' as const },
+  { label: 'Synchronisation', icon: 'sync-outline' as const, href: '/(app)/plus/sync-queue' as const },
 ];
 
 export default function PlusScreen() {

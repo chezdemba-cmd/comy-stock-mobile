@@ -9,12 +9,14 @@ import { ScreenContainer } from '@/components/ScreenContainer';
 import { TextField } from '@/components/TextField';
 import { useCreateShop } from '@/features/company/hooks';
 import { createShopSchema, type CreateShopFormValues } from '@/features/company/schemas';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useCompanyStore } from '@/stores/companyStore';
 import { colors, spacing, typography } from '@/constants/theme';
 
 export default function CreateShopScreen() {
   const { companyId } = useLocalSearchParams<{ companyId: string }>();
   const { mutateAsync, isPending } = useCreateShop();
+  const { isOnline } = useNetworkStatus();
   const setActiveCompany = useCompanyStore((state) => state.setActiveCompany);
   const setActiveShop = useCompanyStore((state) => state.setActiveShop);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -35,6 +37,7 @@ export default function CreateShopScreen() {
     }
     setSubmitError(null);
     try {
+      if (!isOnline) throw new Error('Connexion requise pour cette action.');
       const shop = await mutateAsync({ companyId, ...values });
       setActiveCompany(companyId);
       setActiveShop(shop.id);

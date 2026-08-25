@@ -9,10 +9,12 @@ import { ScreenContainer } from '@/components/ScreenContainer';
 import { SupplierForm } from '@/components/SupplierForm';
 import { useCreateSupplier } from '@/features/suppliers/hooks';
 import { supplierFormSchema, type SupplierFormValues } from '@/features/suppliers/schemas';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { colors, spacing, typography } from '@/constants/theme';
 
 export default function CreateSupplierScreen() {
   const { mutateAsync, isPending } = useCreateSupplier();
+  const { isOnline } = useNetworkStatus();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
@@ -27,6 +29,7 @@ export default function CreateSupplierScreen() {
   const onSubmit = async (values: SupplierFormValues) => {
     setSubmitError(null);
     try {
+      if (!isOnline) throw new Error('Connexion requise pour cette action.');
       await mutateAsync({
         name: values.name,
         phone: values.phone ?? '',

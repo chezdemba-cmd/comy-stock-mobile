@@ -18,6 +18,7 @@ import {
 } from '@/features/products/hooks';
 import { getStockStatus } from '@/features/products/stockStatus';
 import { useSupplier } from '@/features/suppliers/hooks';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useCompanyStore } from '@/stores/companyStore';
 import { formatMoney } from '@/utils/money';
 
@@ -44,6 +45,7 @@ export default function ProductDetailScreen() {
 
   const adjustStock = useAdjustStock(id as string);
   const deleteProduct = useDeleteProduct();
+  const { isOnline } = useNetworkStatus();
 
   const [isAdjustOpen, setIsAdjustOpen] = useState(false);
   const [adjustAmount, setAdjustAmount] = useState('');
@@ -72,6 +74,7 @@ export default function ProductDetailScreen() {
         style: 'destructive',
         onPress: async () => {
           try {
+            if (!isOnline) throw new Error('Connexion requise pour cette action.');
             await deleteProduct.mutateAsync(product.id);
             router.back();
           } catch (error) {

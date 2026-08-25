@@ -15,10 +15,12 @@ import {
   createCompanySchema,
   type CreateCompanyFormValues,
 } from '@/features/company/schemas';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { colors, spacing, typography } from '@/constants/theme';
 
 export default function CreateCompanyScreen() {
   const { mutateAsync, isPending } = useCreateCompany();
+  const { isOnline } = useNetworkStatus();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
@@ -33,6 +35,7 @@ export default function CreateCompanyScreen() {
   const onSubmit = async (values: CreateCompanyFormValues) => {
     setSubmitError(null);
     try {
+      if (!isOnline) throw new Error('Connexion requise pour cette action.');
       const company = await mutateAsync(values);
       router.replace({ pathname: '/(onboarding)/create-shop', params: { companyId: company.id } });
     } catch (error) {
