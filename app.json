@@ -1,17 +1,21 @@
 {
   "expo": {
-    "name": "comy-stock-tmp",
-    "slug": "comy-stock-tmp",
+    "name": "Comy_stock",
+    "slug": "comy-stock",
+    "scheme": "comystock",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#071411",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.comystock.app"
     },
     "android": {
+      "package": "com.comystock.app",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#071411",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -19,7 +23,39 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/mark.png",
+          "imageWidth": 140,
+          "resizeMode": "contain",
+          "backgroundColor": "#071411"
+        }
+      ],
+      "expo-font",
+      "expo-localization",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Comy_stock a besoin de la caméra pour scanner les codes-barres de vos produits."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Comy_stock a besoin d'accéder à vos photos pour illustrer vos produits.",
+          "cameraPermission": "Comy_stock a besoin de la caméra pour prendre une photo de vos produits."
+        }
+      ]
+    ],
+    "extra": {
+      "router": {}
     }
   }
 }

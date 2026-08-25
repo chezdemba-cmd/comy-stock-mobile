@@ -1,0 +1,58 @@
+{
+  "onboarding": {
+    "welcome": {
+      "title": "Gérez toute votre boutique depuis votre téléphone.",
+      "cta": "Commencer"
+    },
+    "authChoice": {
+      "title": "Bienvenue sur Comy_stock",
+      "subtitle": "Créez votre compte ou connectez-vous pour continuer.",
+      "createAccount": "Créer un compte",
+      "login": "Se connecter"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "subtitle": "Ravi de vous revoir.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "vous@exemple.com",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Se connecter",
+      "noAccount": "Pas encore de compte ?",
+      "goToSignup": "Créer un compte",
+      "errorInvalid": "Email ou mot de passe incorrect."
+    },
+    "signup": {
+      "title": "Créer un compte",
+      "subtitle": "Pilotez votre boutique depuis votre mobile.",
+      "nameLabel": "Nom complet",
+      "namePlaceholder": "Votre nom",
+      "emailLabel": "Email",
+      "emailPlaceholder": "vous@exemple.com",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "8 caractères minimum",
+      "submit": "Créer mon compte",
+      "hasAccount": "Vous avez déjà un compte ?",
+      "goToLogin": "Se connecter"
+    },
+    "validation": {
+      "nameRequired": "Le nom est requis.",
+      "emailInvalid": "Adresse email invalide.",
+      "passwordMin": "8 caractères minimum."
+    }
+  },
+  "nav": {
+    "home": "Accueil",
+    "pos": "Caisse",
+    "products": "Produits",
+    "comyAI": "Comy IA",
+    "more": "Plus"
+  },
+  "common": {
+    "comingSoon": "Bientôt disponible",
+    "comingSoonDetail": "Cet écran sera construit dans une prochaine phase.",
+    "logout": "Se déconnecter"
+  }
+}
