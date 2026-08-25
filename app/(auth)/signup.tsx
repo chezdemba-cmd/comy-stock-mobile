@@ -39,7 +39,9 @@ export default function SignupScreen() {
     setSubmitError(null);
     const success = await signup(values);
     if (success) {
-      router.replace('/(app)');
+      // Passe par la porte de routage racine : c'est elle qui redirige vers
+      // create-company puisqu'un tout nouveau compte n'a encore aucune entreprise.
+      router.replace('/');
     } else {
       setSubmitError(errorMessage);
     }

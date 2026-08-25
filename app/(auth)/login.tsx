@@ -39,7 +39,10 @@ export default function LoginScreen() {
     setSubmitError(null);
     const success = await login(values);
     if (success) {
-      router.replace('/(app)');
+      // Passe par la porte de routage racine plutôt que directement vers (app) :
+      // c'est elle qui revalide/réinitialise la boutique active par rapport à la
+      // session en cours (utile si un autre compte a été utilisé sur cet appareil).
+      router.replace('/');
     } else {
       setSubmitError(errorMessage ?? t('auth.login.errorInvalid'));
     }
