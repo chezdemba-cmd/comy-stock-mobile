@@ -320,3 +320,23 @@ export interface EmployeeSalesReportRow {
   revenue: number;
   total_discounts: number;
 }
+
+export type AiMessageRole = 'user' | 'assistant';
+
+export interface AiConversation {
+  id: string;
+  company_id: string;
+  shop_id: string;
+  created_by: string;
+  title: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AiMessage {
+  id: string;
+  conversation_id: string;
+  role: AiMessageRole;
+  content: string;
+  created_at: string;
+}
