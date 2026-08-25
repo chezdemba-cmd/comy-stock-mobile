@@ -288,3 +288,35 @@ export interface Expense {
   created_by: string;
   created_at: string;
 }
+
+export interface SalesSummary {
+  revenue: number;
+  gross_profit: number;
+  expenses_total: number;
+  net_profit: number;
+  sales_count: number;
+  average_basket: number;
+}
+
+export interface ProductSalesReportRow {
+  product_id: string;
+  product_name: string;
+  category_id: string | null;
+  category_name: string | null;
+  quantity_sold: number;
+  revenue: number;
+  margin: number;
+}
+
+export interface DailyRevenueRow {
+  sale_date: string;
+  revenue: number;
+}
+
+export interface EmployeeSalesReportRow {
+  employee_id: string;
+  employee_name: string;
+  sales_count: number;
+  revenue: number;
+  total_discounts: number;
+}

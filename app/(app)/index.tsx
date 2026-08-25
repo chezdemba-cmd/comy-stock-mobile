@@ -24,12 +24,13 @@ const OPERATION_ICON: Record<OperationKind, keyof typeof Ionicons.glyphMap> = {
 };
 
 export default function DashboardScreen() {
-  const { data } = useDashboardData();
   const { data: memberships } = useMyMemberships();
   const activeCompanyId = useCompanyStore((state) => state.activeCompanyId);
 
   const currency =
     memberships?.companies.find((company) => company.id === activeCompanyId)?.currency ?? 'XOF';
+
+  const { data } = useDashboardData(currency);
 
   const variationPercent = data.revenueYesterday
     ? Math.round(((data.revenueToday - data.revenueYesterday) / data.revenueYesterday) * 100)

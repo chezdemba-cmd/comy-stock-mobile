@@ -7,6 +7,7 @@ export interface RecentOperation {
   subtitle: string;
   amount: number;
   time: string;
+  createdAt: string;
 }
 
 export type AlertSeverity = 'warning' | 'danger';

@@ -24,6 +24,9 @@ export default function PlusLayout() {
       <Stack.Screen name="suppliers/[id]/purchase" options={{ title: 'Nouvel achat' }} />
       <Stack.Screen name="expenses/index" options={{ title: 'Dépenses' }} />
       <Stack.Screen name="expenses/create" options={{ title: 'Nouvelle dépense' }} />
+      <Stack.Screen name="reports/index" options={{ title: 'Rapports' }} />
+      <Stack.Screen name="reports/products" options={{ title: 'Rapport produits' }} />
+      <Stack.Screen name="reports/employees" options={{ title: 'Rapport employés' }} />
     </Stack>
   );
 }
