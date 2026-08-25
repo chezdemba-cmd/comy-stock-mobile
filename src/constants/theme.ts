@@ -1,23 +1,23 @@
 /**
  * Design tokens de la marque Comy_stock.
- * Valeurs reprises telles quelles du handoff design (design_handoff_comy_stock/README.md)
- * pour rester fidèle à l'identité visuelle du site vitrine.
+ * Palette affinée par rapport au handoff design initial (design_handoff_comy_stock/README.md) :
+ * fond neutre anthracite (moins de teinte verte), vert réservé aux accents/actions, or inchangé.
  */
 
 export const colors = {
-  background: '#071411',
-  backgroundElevated: '#0b2019',
-  surface: '#0d1f1a',
-  surfaceGradientTop: '#10241e',
-  surfaceHighlightStart: '#123028',
-  surfaceHighlightEnd: '#0d1f1a',
+  background: '#15171a',
+  backgroundElevated: '#1a1d20',
+  surface: '#1e2124',
+  surfaceGradientTop: '#22262a',
+  surfaceHighlightStart: '#262b2f',
+  surfaceHighlightEnd: '#1e2124',
 
-  green: '#2fa85c',
-  greenGradientStart: '#1c8a45',
-  greenGradientEnd: '#2fa85c',
-  greenDeep: '#197a3e',
-  greenDeeper: '#14663a',
-  greenDeepest: '#0d4426',
+  green: '#22a06b',
+  greenGradientStart: '#158a56',
+  greenGradientEnd: '#22a06b',
+  greenDeep: '#127a4c',
+  greenDeeper: '#0f6640',
+  greenDeepest: '#0a4429',
 
   gold: '#d4af37',
   goldLightStart: '#e8c46a',
@@ -25,18 +25,18 @@ export const colors = {
 
   textPrimary: '#f2f8f5',
   textOnWhite: '#ffffff',
-  textSecondary: '#9ab5ab',
-  textTertiary: '#7d968d',
-  textTertiaryAlt: '#8ba79d',
+  textSecondary: '#98a3a0',
+  textTertiary: '#7c8683',
+  textTertiaryAlt: '#8b9895',
   textOnLight: '#072e17',
 
-  border: 'rgba(47,168,92,0.2)',
-  borderHover: 'rgba(47,168,92,0.35)',
-  borderPremium: 'rgba(47,168,92,0.6)',
+  border: 'rgba(34,160,107,0.2)',
+  borderHover: 'rgba(34,160,107,0.35)',
+  borderPremium: 'rgba(34,160,107,0.6)',
 
   danger: '#e5484d',
   warning: '#e8c46a',
-  success: '#2fa85c',
+  success: '#22a06b',
 } as const;
 
 export const radii = {
@@ -73,7 +73,7 @@ export const typography = {
 
 export const shadows = {
   button: {
-    shadowColor: '#1c8a45',
+    shadowColor: '#158a56',
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.35,
     shadowRadius: 20,

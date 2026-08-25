@@ -32,9 +32,9 @@ export const PLANS: Record<PlanTier, PlanDefinition> = {
   premium: {
     tier: 'premium',
     label: 'Premium',
-    monthlyPrice: 2000,
-    yearlyPrice: 21600,
-    monthlySubtitle: 'ou 21 600 FCFA/an (-10%)',
+    monthlyPrice: 10000,
+    yearlyPrice: 108000,
+    monthlySubtitle: 'ou 108 000 FCFA/an (-10%)',
     features: [
       '3 boutiques',
       'Produits illimités',
@@ -49,9 +49,9 @@ export const PLANS: Record<PlanTier, PlanDefinition> = {
   pro: {
     tier: 'pro',
     label: 'Pro',
-    monthlyPrice: 5000,
-    yearlyPrice: 54000,
-    monthlySubtitle: 'ou 54 000 FCFA/an (-10%)',
+    monthlyPrice: 20000,
+    yearlyPrice: 216000,
+    monthlySubtitle: 'ou 216 000 FCFA/an (-10%)',
     features: [
       '10 boutiques',
       'Produits illimités',

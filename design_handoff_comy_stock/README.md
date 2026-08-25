@@ -99,9 +99,9 @@ Bascule pilule **Mensuel / Annuel · -10%** (onglet actif : fond blanc, texte `#
 
 | | Free | Premium (mis en avant, badge « POPULAIRE ») | Pro |
 |---|---|---|---|
-| Mensuel | Gratuit | 2 000 F/mois | 5 000 F/mois |
-| Annuel | Gratuit | 21 600 F/an — soit 1 800 F/mois | 54 000 F/an — soit 4 500 F/mois |
-| Sous-titre mensuel | Pour démarrer sans risque | ou 21 600 FCFA/an (-10%) | ou 54 000 FCFA/an (-10%) |
+| Mensuel | Gratuit | 10 000 F/mois | 20 000 F/mois |
+| Annuel | Gratuit | 108 000 F/an — soit 9 000 F/mois | 216 000 F/an — soit 18 000 F/mois |
+| Sous-titre mensuel | Pour démarrer sans risque | ou 108 000 FCFA/an (-10%) | ou 216 000 FCFA/an (-10%) |
 | CTA | Commencer gratuitement | S'abonner | S'abonner |
 
 Free : 1 boutique · Espace de vente · 10 produits maximum · 15 messages/mois avec Comy IA · Analyse financière par l'IA · Espace caisse · Clients illimités · 5 approvisionnements · Historique des mouvements.
