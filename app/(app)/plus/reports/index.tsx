@@ -3,6 +3,8 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
+import { Button } from '@/components/Button';
+import { EmptyState } from '@/components/EmptyState';
 import { RevenueBarChart } from '@/components/RevenueBarChart';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { TextField } from '@/components/TextField';
@@ -25,12 +27,25 @@ export default function ReportsScreen() {
     return getPeriodRange(preset);
   }, [preset, customFrom, customTo]);
 
-  const { data: summary } = useSalesSummary(range);
-  const { data: dailyRevenue = [] } = useDailyRevenue(range);
   const { data: memberships } = useMyMemberships();
   const activeCompanyId = useCompanyStore((state) => state.activeCompanyId);
-  const currency =
-    memberships?.companies.find((company) => company.id === activeCompanyId)?.currency ?? 'XOF';
+  const activeCompany = memberships?.companies.find((company) => company.id === activeCompanyId);
+  const currency = activeCompany?.currency ?? 'XOF';
+
+  const { data: summary } = useSalesSummary(range);
+  const { data: dailyRevenue = [] } = useDailyRevenue(range);
+
+  if (activeCompany?.plan === 'free') {
+    return (
+      <ScreenContainer edges={['bottom']} centered>
+        <EmptyState
+          title="Rapports disponibles à partir de la formule Premium"
+          description="Passez à une formule supérieure pour accéder aux rapports détaillés de votre boutique."
+        />
+        <Button label="Voir les formules" onPress={() => router.push('/(app)/plus/subscription')} />
+      </ScreenContainer>
+    );
+  }
 
   return (
     <ScreenContainer edges={['bottom']}>

@@ -1,29 +1,37 @@
 import { supabase } from '@/services/supabase';
-import type { Company, Shop } from '@/types/database';
+import type { AppRole, Company, Shop } from '@/types/database';
 
 export interface Memberships {
   companies: Company[];
   shops: Shop[];
+  companyRoles: Record<string, AppRole>;
 }
 
 export async function fetchMyMemberships(userId: string): Promise<Memberships> {
   const [companyResult, shopResult] = await Promise.all([
-    supabase.from('company_members').select('companies(*)').eq('user_id', userId),
+    supabase.from('company_members').select('role, companies(*)').eq('user_id', userId),
     supabase.from('shop_members').select('shops(*)').eq('user_id', userId),
   ]);
 
   if (companyResult.error) throw companyResult.error;
   if (shopResult.error) throw shopResult.error;
 
-  const companies = (companyResult.data ?? [])
-    .map((row) => row.companies as unknown as Company | null)
+  const companyRows = (companyResult.data ?? []) as unknown as { role: AppRole; companies: Company | null }[];
+
+  const companies = companyRows
+    .map((row) => row.companies)
     .filter((company): company is Company => company !== null);
+
+  const companyRoles = companyRows.reduce<Record<string, AppRole>>((acc, row) => {
+    if (row.companies) acc[row.companies.id] = row.role;
+    return acc;
+  }, {});
 
   const shops = (shopResult.data ?? [])
     .map((row) => row.shops as unknown as Shop | null)
     .filter((shop): shop is Shop => shop !== null);
 
-  return { companies, shops };
+  return { companies, shops, companyRoles };
 }
 
 export interface CreateCompanyInput {

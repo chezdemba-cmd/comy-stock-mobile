@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useAuthStore } from '@/stores/authStore';
+import { useCompanyStore } from '@/stores/companyStore';
+import type { AppRole } from '@/types/database';
 import {
   createCompany,
   createShop,
@@ -19,6 +21,13 @@ export function useMyMemberships() {
     queryFn: () => fetchMyMemberships(userId as string),
     enabled: Boolean(userId),
   });
+}
+
+export function useActiveCompanyRole(): AppRole | null {
+  const activeCompanyId = useCompanyStore((state) => state.activeCompanyId);
+  const { data: memberships } = useMyMemberships();
+  if (!activeCompanyId) return null;
+  return memberships?.companyRoles[activeCompanyId] ?? null;
 }
 
 export function useCreateCompany() {

@@ -1,3 +1,5 @@
+import { FunctionsHttpError } from '@supabase/supabase-js';
+
 import { supabase } from '@/services/supabase';
 import type { AiMessage } from '@/types/database';
 
@@ -13,6 +15,16 @@ export interface SendMessageResult {
   messages: AiMessage[];
 }
 
+export class QuotaExceededError extends Error {
+  aiPeriod: 'day' | 'month';
+
+  constructor(message: string, aiPeriod: 'day' | 'month') {
+    super(message);
+    this.name = 'QuotaExceededError';
+    this.aiPeriod = aiPeriod;
+  }
+}
+
 export async function sendMessage(input: SendMessageInput): Promise<SendMessageResult> {
   const { data, error } = await supabase.functions.invoke('comy-ai', {
     body: {
@@ -23,7 +35,15 @@ export async function sendMessage(input: SendMessageInput): Promise<SendMessageR
     },
   });
 
-  if (error) throw error;
+  if (error) {
+    if (error instanceof FunctionsHttpError) {
+      const body = await error.context.json().catch(() => null);
+      if (body?.error === 'quota_exceeded') {
+        throw new QuotaExceededError(body.message as string, body.aiPeriod as 'day' | 'month');
+      }
+    }
+    throw error;
+  }
   return data as SendMessageResult;
 }
 

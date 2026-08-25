@@ -10,11 +10,14 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 import { AIMessageBubble } from '@/components/AIMessageBubble';
+import { Button } from '@/components/Button';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { colors, radii, spacing, typography } from '@/constants/theme';
+import { QuotaExceededError } from '@/features/comyIa/api';
 import { useLatestConversation, useSendMessage } from '@/features/comyIa/hooks';
 
 const SUGGESTED_QUESTIONS = [
@@ -31,6 +34,7 @@ export default function ComyIAScreen() {
   const [input, setInput] = useState('');
   const [pendingUserMessage, setPendingUserMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [quotaExceeded, setQuotaExceeded] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
 
   const conversationId = data?.conversationId ?? null;
@@ -40,12 +44,18 @@ export default function ComyIAScreen() {
     const trimmed = text.trim();
     if (!trimmed || sendMessage.isPending) return;
     setError(null);
+    setQuotaExceeded(false);
     setInput('');
     setPendingUserMessage(trimmed);
     try {
       await sendMessage.mutateAsync({ conversationId, message: trimmed });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Une erreur est survenue.');
+      if (err instanceof QuotaExceededError) {
+        setQuotaExceeded(true);
+        setError(err.message);
+      } else {
+        setError(err instanceof Error ? err.message : 'Une erreur est survenue.');
+      }
     } finally {
       setPendingUserMessage(null);
       requestAnimationFrame(() => scrollRef.current?.scrollToEnd({ animated: true }));
@@ -88,6 +98,14 @@ export default function ComyIAScreen() {
           ) : null}
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
+          {quotaExceeded ? (
+            <Button
+              label="Voir les formules"
+              variant="secondary"
+              onPress={() => router.push('/(app)/plus/subscription')}
+              style={styles.upgradeButton}
+            />
+          ) : null}
         </ScrollView>
 
         <View style={styles.inputRow}>
@@ -168,6 +186,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     textAlign: 'center',
     marginTop: spacing.sm,
+  },
+  upgradeButton: {
+    marginTop: spacing.md,
   },
   inputRow: {
     flexDirection: 'row',

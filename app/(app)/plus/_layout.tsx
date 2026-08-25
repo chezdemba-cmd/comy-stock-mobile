@@ -28,6 +28,7 @@ export default function PlusLayout() {
       <Stack.Screen name="reports/products" options={{ title: 'Rapport produits' }} />
       <Stack.Screen name="reports/employees" options={{ title: 'Rapport employés' }} />
       <Stack.Screen name="sync-queue" options={{ title: 'Synchronisation' }} />
+      <Stack.Screen name="subscription" options={{ title: 'Abonnement' }} />
     </Stack>
   );
 }

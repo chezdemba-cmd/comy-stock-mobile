@@ -226,6 +226,30 @@ Deno.serve(async (req: Request) => {
       });
     }
 
+    // Contrôle de quota avant tout appel à Claude (chaque message coûte de l'argent en API
+    // Anthropic) — voir subscription_usage (Phase 12), qui agrège les messages de toute
+    // l'entreprise sur la période associée à sa formule (jour ou mois).
+    const { data: usage, error: usageError } = await supabase
+      .rpc('subscription_usage', { p_company_id: companyId })
+      .single();
+    if (usageError) throw usageError;
+    const usageRow = usage as { plan: string; ai_used: number; ai_max: number; ai_period: 'day' | 'month' };
+    if (usageRow.ai_used >= usageRow.ai_max) {
+      return new Response(
+        JSON.stringify({
+          error: 'quota_exceeded',
+          message:
+            usageRow.ai_period === 'day'
+              ? "Quota de messages Comy IA atteint pour aujourd'hui. Passez à une formule supérieure pour continuer."
+              : 'Quota de messages Comy IA atteint pour ce mois. Passez à une formule supérieure pour continuer.',
+          plan: usageRow.plan,
+          aiMax: usageRow.ai_max,
+          aiPeriod: usageRow.ai_period,
+        }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     let conversationId = body.conversationId;
     if (!conversationId) {
       const { data: conversation, error: convError } = await supabase

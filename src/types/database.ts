@@ -1,5 +1,7 @@
 export type AppRole = 'owner' | 'manager' | 'cashier' | 'stock_manager' | 'accountant';
 
+export type PlanTier = 'free' | 'premium' | 'pro';
+
 export interface Profile {
   id: string;
   full_name: string | null;
@@ -16,6 +18,7 @@ export interface Company {
   city: string;
   currency: string;
   business_type: string;
+  plan: PlanTier;
   created_by: string;
   created_at: string;
   updated_at: string;
@@ -339,4 +342,17 @@ export interface AiMessage {
   role: AiMessageRole;
   content: string;
   created_at: string;
+}
+
+export interface SubscriptionUsage {
+  plan: PlanTier;
+  shops_used: number;
+  shops_max: number | null;
+  products_used: number;
+  products_max: number | null;
+  purchases_used: number;
+  purchases_max: number | null;
+  ai_used: number;
+  ai_max: number;
+  ai_period: 'day' | 'month';
 }
