@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { CategoryPicker } from '@/components/CategoryPicker';
 import { SelectPills } from '@/components/SelectPills';
+import { SupplierPicker } from '@/components/SupplierPicker';
 import { TextField } from '@/components/TextField';
 import { colors, radii, spacing, typography } from '@/constants/theme';
 import { unitOptions, type ProductFormValues } from '@/features/products/schemas';
@@ -13,6 +14,8 @@ interface ProductFormFieldsProps {
   errors: FieldErrors<ProductFormValues>;
   categoryId: string | null;
   onCategoryChange: (categoryId: string | null) => void;
+  supplierId: string | null;
+  onSupplierChange: (supplierId: string | null) => void;
   photoUri: string | null;
   onPickPhoto: () => void;
   showInitialStock: boolean;
@@ -24,6 +27,8 @@ export function ProductFormFields({
   errors,
   categoryId,
   onCategoryChange,
+  supplierId,
+  onSupplierChange,
   photoUri,
   onPickPhoto,
   showInitialStock,
@@ -189,19 +194,7 @@ export function ProductFormFields({
         )}
       />
 
-      <Controller
-        control={control}
-        name="supplierName"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextField
-            label="Fournisseur (facultatif)"
-            placeholder="Ex. Grossiste Koné"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
-      />
+      <SupplierPicker value={supplierId} onChange={onSupplierChange} />
 
       <Controller
         control={control}

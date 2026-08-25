@@ -11,6 +11,7 @@ import { colors, radii, spacing, typography } from '@/constants/theme';
 
 const MENU_ITEMS = [
   { label: 'Clients', icon: 'people-outline' as const, href: '/(app)/plus/clients' as const },
+  { label: 'Fournisseurs', icon: 'briefcase-outline' as const, href: '/(app)/plus/suppliers' as const },
 ];
 
 export default function PlusScreen() {

@@ -24,6 +24,7 @@ export default function CreateProductScreen() {
     memberships?.companies.find((company) => company.id === activeCompanyId)?.currency ?? 'XOF';
 
   const [categoryId, setCategoryId] = useState<string | null>(null);
+  const [supplierId, setSupplierId] = useState<string | null>(null);
   const { localUri, pendingUpload, pick } = usePickProductPhoto();
   const { mutateAsync, isPending } = useCreateProduct();
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -44,7 +45,6 @@ export default function CreateProductScreen() {
       initialStock: '',
       stockMin: '0',
       unit: 'unité',
-      supplierName: '',
       description: '',
     },
   });
@@ -70,7 +70,7 @@ export default function CreateProductScreen() {
           salePrice: Number(values.salePrice),
           stockMin: Number(values.stockMin),
           unit: values.unit,
-          supplierName: values.supplierName ?? '',
+          supplierId,
           description: values.description ?? '',
           photoUrl,
         },
@@ -92,6 +92,8 @@ export default function CreateProductScreen() {
             errors={errors}
             categoryId={categoryId}
             onCategoryChange={setCategoryId}
+            supplierId={supplierId}
+            onSupplierChange={setSupplierId}
             photoUri={localUri}
             onPickPhoto={pick}
             showInitialStock

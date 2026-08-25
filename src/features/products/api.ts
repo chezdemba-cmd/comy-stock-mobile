@@ -78,7 +78,7 @@ export interface ProductInput {
   salePrice: number;
   stockMin: number;
   unit: string;
-  supplierName: string;
+  supplierId: string | null;
   description: string;
   photoUrl: string | null;
 }
@@ -96,7 +96,7 @@ export async function createProduct(input: ProductInput, initialStock: number): 
       p_sale_price: input.salePrice,
       p_stock_min: input.stockMin,
       p_unit: input.unit,
-      p_supplier_name: input.supplierName,
+      p_supplier_id: input.supplierId,
       p_description: input.description,
       p_photo_url: input.photoUrl,
       p_initial_stock: initialStock,
@@ -121,7 +121,7 @@ export async function updateProduct(productId: string, input: ProductEditInput):
       sale_price: input.salePrice,
       stock_min: input.stockMin,
       unit: input.unit || 'unité',
-      supplier_name: input.supplierName || null,
+      supplier_id: input.supplierId,
       description: input.description || null,
       photo_url: input.photoUrl,
     })

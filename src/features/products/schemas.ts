@@ -17,7 +17,6 @@ export const productFormSchema = z.object({
   initialStock: z.string().optional(),
   stockMin: numericString('Le stock minimum doit être un nombre positif.'),
   unit: z.string().min(1, "L'unité est requise."),
-  supplierName: z.string().optional(),
   description: z.string().optional(),
 });
 

@@ -67,7 +67,7 @@ export interface Product {
   sale_price: number;
   stock_min: number;
   unit: string;
-  supplier_name: string | null;
+  supplier_id: string | null;
   description: string | null;
   photo_url: string | null;
   created_by: string;
@@ -208,4 +208,58 @@ export interface CashMovement {
   reason: string | null;
   created_by: string;
   created_at: string;
+}
+
+export interface Supplier {
+  id: string;
+  company_id: string;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  whatsapp: string | null;
+  address: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Purchase {
+  id: string;
+  company_id: string;
+  shop_id: string;
+  supplier_id: string | null;
+  purchase_number: number;
+  total: number;
+  amount_paid: number;
+  created_by: string;
+  created_at: string;
+}
+
+export interface PurchaseItem {
+  id: string;
+  purchase_id: string;
+  product_id: string;
+  product_name: string;
+  quantity: number;
+  unit_cost: number;
+  line_total: number;
+}
+
+export interface SupplierDebt {
+  id: string;
+  company_id: string;
+  shop_id: string;
+  supplier_id: string;
+  purchase_id: string | null;
+  original_amount: number;
+  created_by: string;
+  created_at: string;
+}
+
+export interface SupplierDebtPayment {
+  id: string;
+  debt_id: string;
+  amount: number;
+  paid_at: string;
+  created_by: string;
 }

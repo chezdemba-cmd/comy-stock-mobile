@@ -17,6 +17,7 @@ import {
   useStockMovements,
 } from '@/features/products/hooks';
 import { getStockStatus } from '@/features/products/stockStatus';
+import { useSupplier } from '@/features/suppliers/hooks';
 import { useCompanyStore } from '@/stores/companyStore';
 import { formatMoney } from '@/utils/money';
 
@@ -35,6 +36,7 @@ export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: product } = useProduct(id);
   const { data: movements = [] } = useStockMovements(id);
+  const { data: supplier } = useSupplier(product?.supplier_id ?? undefined);
   const { data: memberships } = useMyMemberships();
   const activeCompanyId = useCompanyStore((state) => state.activeCompanyId);
   const currency =
@@ -121,8 +123,8 @@ export default function ProductDetailScreen() {
         </View>
 
         {product.description ? <Text style={styles.description}>{product.description}</Text> : null}
-        {product.supplier_name ? (
-          <Text style={styles.meta}>Fournisseur : {product.supplier_name}</Text>
+        {supplier ? (
+          <Text style={styles.meta}>Fournisseur : {supplier.name}</Text>
         ) : null}
 
         <View style={styles.actionsRow}>

@@ -17,6 +17,11 @@ export default function PlusLayout() {
       <Stack.Screen name="clients/create" options={{ title: 'Nouveau client' }} />
       <Stack.Screen name="clients/[id]/index" options={{ title: 'Client' }} />
       <Stack.Screen name="clients/[id]/edit" options={{ title: 'Modifier' }} />
+      <Stack.Screen name="suppliers/index" options={{ title: 'Fournisseurs' }} />
+      <Stack.Screen name="suppliers/create" options={{ title: 'Nouveau fournisseur' }} />
+      <Stack.Screen name="suppliers/[id]/index" options={{ title: 'Fournisseur' }} />
+      <Stack.Screen name="suppliers/[id]/edit" options={{ title: 'Modifier' }} />
+      <Stack.Screen name="suppliers/[id]/purchase" options={{ title: 'Nouvel achat' }} />
     </Stack>
   );
 }

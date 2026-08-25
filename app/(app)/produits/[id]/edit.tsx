@@ -34,6 +34,7 @@ function EditProductForm({ product }: { product: ProductWithStock }) {
     memberships?.companies.find((company) => company.id === activeCompanyId)?.currency ?? 'XOF';
 
   const [categoryId, setCategoryId] = useState<string | null>(product.category_id);
+  const [supplierId, setSupplierId] = useState<string | null>(product.supplier_id);
   const [existingPhotoUrl] = useState<string | null>(product.photo_url);
   const { localUri, pendingUpload, pick } = usePickProductPhoto();
   const { mutateAsync, isPending } = useUpdateProduct(product.id);
@@ -54,7 +55,6 @@ function EditProductForm({ product }: { product: ProductWithStock }) {
       salePrice: String(product.sale_price),
       stockMin: String(product.stock_min),
       unit: product.unit,
-      supplierName: product.supplier_name ?? '',
       description: product.description ?? '',
     },
   });
@@ -77,7 +77,7 @@ function EditProductForm({ product }: { product: ProductWithStock }) {
         salePrice: Number(values.salePrice),
         stockMin: Number(values.stockMin),
         unit: values.unit,
-        supplierName: values.supplierName ?? '',
+        supplierId,
         description: values.description ?? '',
         photoUrl,
       });
@@ -97,6 +97,8 @@ function EditProductForm({ product }: { product: ProductWithStock }) {
             errors={errors}
             categoryId={categoryId}
             onCategoryChange={setCategoryId}
+            supplierId={supplierId}
+            onSupplierChange={setSupplierId}
             photoUri={localUri ?? existingPhotoUrl}
             onPickPhoto={pick}
             showInitialStock={false}
