@@ -1,0 +1,56 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { useOpenSession } from '@/features/pos/hooks';
+import { useCompanyStore } from '@/stores/companyStore';
+import {
+  createExpense,
+  fetchExpenses,
+  fetchSessionExpenses,
+  type CreateExpenseInput,
+} from './api';
+
+function useActiveScope() {
+  const companyId = useCompanyStore((state) => state.activeCompanyId);
+  const shopId = useCompanyStore((state) => state.activeShopId);
+  return { companyId, shopId };
+}
+
+export function useExpenses() {
+  const { companyId, shopId } = useActiveScope();
+
+  return useQuery({
+    queryKey: ['expenses', companyId, shopId],
+    queryFn: () => fetchExpenses(companyId as string, shopId as string),
+    enabled: Boolean(companyId && shopId),
+  });
+}
+
+export function useSessionExpenses(sessionId: string | undefined) {
+  return useQuery({
+    queryKey: ['sessionExpenses', sessionId],
+    queryFn: () => fetchSessionExpenses(sessionId as string),
+    enabled: Boolean(sessionId),
+  });
+}
+
+export function useCreateExpense() {
+  const queryClient = useQueryClient();
+  const { companyId, shopId } = useActiveScope();
+  const { data: openSession } = useOpenSession();
+
+  return useMutation({
+    mutationFn: (input: Omit<CreateExpenseInput, 'companyId' | 'shopId' | 'cashSessionId'>) =>
+      createExpense({
+        ...input,
+        companyId: companyId as string,
+        shopId: shopId as string,
+        cashSessionId: openSession?.id ?? null,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['expenses', companyId, shopId] });
+      if (openSession?.id) {
+        queryClient.invalidateQueries({ queryKey: ['sessionExpenses', openSession.id] });
+      }
+    },
+  });
+}

@@ -1,4 +1,4 @@
-import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -37,8 +37,6 @@ export default function DashboardScreen() {
 
   const averageBasket = data.salesCount > 0 ? Math.round(data.revenueToday / data.salesCount) : 0;
 
-  const notImplemented = () => Alert.alert('Bientôt disponible', 'Cet écran arrive dans une prochaine phase.');
-
   return (
     <ScreenContainer edges={['top', 'bottom']}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
@@ -55,7 +53,7 @@ export default function DashboardScreen() {
         <View style={styles.quickActions}>
           <QuickAction icon="cart" label="Nouvelle vente" onPress={() => router.push('/(app)/caisse')} />
           <QuickAction icon="cube" label="Ajouter produit" onPress={() => router.push('/(app)/produits')} />
-          <QuickAction icon="wallet" label="Ajouter dépense" onPress={notImplemented} />
+          <QuickAction icon="wallet" label="Ajouter dépense" onPress={() => router.push('/(app)/plus/expenses/create')} />
           <QuickAction icon="card" label="Encaisser dette" onPress={() => router.push('/(app)/plus/clients')} />
           <QuickAction icon="sparkles" label="Comy IA" onPress={() => router.push('/(app)/comy-ia')} />
         </View>

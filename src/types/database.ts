@@ -263,3 +263,28 @@ export interface SupplierDebtPayment {
   paid_at: string;
   created_by: string;
 }
+
+export type ExpenseCategory =
+  | 'transport'
+  | 'electricite'
+  | 'loyer'
+  | 'salaire'
+  | 'achat'
+  | 'livraison'
+  | 'maintenance'
+  | 'communication'
+  | 'autre';
+
+export interface Expense {
+  id: string;
+  company_id: string;
+  shop_id: string;
+  cash_session_id: string | null;
+  category: ExpenseCategory;
+  amount: number;
+  description: string | null;
+  receipt_photo_url: string | null;
+  expense_date: string;
+  created_by: string;
+  created_at: string;
+}

@@ -11,7 +11,7 @@ import { useMyMemberships } from '@/features/company/hooks';
 import { uploadProductPhoto } from '@/features/products/api';
 import { useProduct, useUpdateProduct } from '@/features/products/hooks';
 import { productFormSchema, type ProductFormValues } from '@/features/products/schemas';
-import { usePickProductPhoto } from '@/features/products/usePickPhoto';
+import { usePickImage } from '@/hooks/usePickImage';
 import type { ProductWithStock } from '@/features/products/api';
 import { useCompanyStore } from '@/stores/companyStore';
 import { colors, spacing, typography } from '@/constants/theme';
@@ -36,7 +36,7 @@ function EditProductForm({ product }: { product: ProductWithStock }) {
   const [categoryId, setCategoryId] = useState<string | null>(product.category_id);
   const [supplierId, setSupplierId] = useState<string | null>(product.supplier_id);
   const [existingPhotoUrl] = useState<string | null>(product.photo_url);
-  const { localUri, pendingUpload, pick } = usePickProductPhoto();
+  const { localUri, pendingUpload, pick } = usePickImage();
   const { mutateAsync, isPending } = useUpdateProduct(product.id);
   const [submitError, setSubmitError] = useState<string | null>(null);
 

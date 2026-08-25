@@ -11,7 +11,7 @@ import { useMyMemberships } from '@/features/company/hooks';
 import { uploadProductPhoto } from '@/features/products/api';
 import { useCreateProduct } from '@/features/products/hooks';
 import { productFormSchema, type ProductFormValues } from '@/features/products/schemas';
-import { usePickProductPhoto } from '@/features/products/usePickPhoto';
+import { usePickImage } from '@/hooks/usePickImage';
 import { useCompanyStore } from '@/stores/companyStore';
 import { colors, spacing, typography } from '@/constants/theme';
 
@@ -25,7 +25,7 @@ export default function CreateProductScreen() {
 
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [supplierId, setSupplierId] = useState<string | null>(null);
-  const { localUri, pendingUpload, pick } = usePickProductPhoto();
+  const { localUri, pendingUpload, pick } = usePickImage();
   const { mutateAsync, isPending } = useCreateProduct();
   const [submitError, setSubmitError] = useState<string | null>(null);
 

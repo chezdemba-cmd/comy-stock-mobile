@@ -4,10 +4,13 @@ import { router } from 'expo-router';
 
 import { Button } from '@/components/Button';
 import { EmptyState } from '@/components/EmptyState';
+import { ListRow } from '@/components/ListRow';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { TextField } from '@/components/TextField';
 import { colors, radii, spacing, typography } from '@/constants/theme';
 import { useMyMemberships } from '@/features/company/hooks';
+import { useSessionExpenses } from '@/features/expenses/hooks';
+import { expenseCategoryLabel } from '@/features/expenses/schemas';
 import { useAddCashMovement, useOpenSession } from '@/features/pos/hooks';
 import { useCompanyStore } from '@/stores/companyStore';
 import { formatMoney } from '@/utils/money';
@@ -20,6 +23,7 @@ export default function RegisterScreen() {
     memberships?.companies.find((company) => company.id === activeCompanyId)?.currency ?? 'XOF';
 
   const addMovement = useAddCashMovement();
+  const { data: sessionExpenses = [] } = useSessionExpenses(session?.id);
   const [movementType, setMovementType] = useState<'in' | 'out'>('out');
   const [amount, setAmount] = useState('');
   const [reason, setReason] = useState('');
@@ -75,6 +79,25 @@ export default function RegisterScreen() {
           style={styles.movementSubmit}
         />
 
+        {sessionExpenses.length > 0 ? (
+          <>
+            <Text style={styles.sectionTitle}>Dépenses de la session</Text>
+            <View style={styles.expensesCard}>
+              {sessionExpenses.map((expense) => (
+                <ListRow
+                  key={expense.id}
+                  icon="wallet-outline"
+                  iconTone="danger"
+                  title={expenseCategoryLabel[expense.category] ?? expense.category}
+                  subtitle={expense.description ?? undefined}
+                  trailingTop={formatMoney(expense.amount, currency)}
+                  trailingTone="danger"
+                />
+              ))}
+            </View>
+          </>
+        ) : null}
+
         <Button label="Clôturer la caisse" onPress={() => router.push('/(app)/caisse/closing')} />
       </ScrollView>
     </ScreenContainer>
@@ -122,5 +145,13 @@ const styles = StyleSheet.create({
   },
   movementSubmit: {
     marginBottom: spacing.xxl,
+  },
+  expensesCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.lg,
+    marginBottom: spacing.xl,
   },
 });

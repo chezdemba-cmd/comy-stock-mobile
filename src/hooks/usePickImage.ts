@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 
-export function usePickProductPhoto(initialUri: string | null = null) {
+export function usePickImage(initialUri: string | null = null) {
   const [localUri, setLocalUri] = useState<string | null>(initialUri);
   const [pendingUpload, setPendingUpload] = useState(false);
 
