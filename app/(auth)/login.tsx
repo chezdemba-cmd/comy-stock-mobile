@@ -23,7 +23,7 @@ import { colors, spacing, typography } from '@/constants/theme';
 
 export default function LoginScreen() {
   const { t } = useTranslation();
-  const { login, isSubmitting, errorMessage } = useAuth();
+  const { login, isSubmitting } = useAuth();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
@@ -37,14 +37,14 @@ export default function LoginScreen() {
 
   const onSubmit = async (values: LoginFormValues) => {
     setSubmitError(null);
-    const success = await login(values);
-    if (success) {
+    const errorMessage = await login(values);
+    if (!errorMessage) {
       // Passe par la porte de routage racine plutôt que directement vers (app) :
       // c'est elle qui revalide/réinitialise la boutique active par rapport à la
       // session en cours (utile si un autre compte a été utilisé sur cet appareil).
       router.replace('/');
     } else {
-      setSubmitError(errorMessage ?? t('auth.login.errorInvalid'));
+      setSubmitError(errorMessage);
     }
   };
 

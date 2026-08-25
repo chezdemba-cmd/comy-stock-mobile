@@ -5,26 +5,19 @@ import type { LoginFormValues, SignupFormValues } from './schemas';
 
 export function useAuth() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  async function login(values: LoginFormValues) {
+  async function login(values: LoginFormValues): Promise<string | null> {
     setIsSubmitting(true);
-    setErrorMessage(null);
     const { error } = await supabase.auth.signInWithPassword({
       email: values.email,
       password: values.password,
     });
     setIsSubmitting(false);
-    if (error) {
-      setErrorMessage(error.message);
-      return false;
-    }
-    return true;
+    return error ? error.message : null;
   }
 
-  async function signup(values: SignupFormValues) {
+  async function signup(values: SignupFormValues): Promise<string | null> {
     setIsSubmitting(true);
-    setErrorMessage(null);
     const { error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
@@ -33,12 +26,8 @@ export function useAuth() {
       },
     });
     setIsSubmitting(false);
-    if (error) {
-      setErrorMessage(error.message);
-      return false;
-    }
-    return true;
+    return error ? error.message : null;
   }
 
-  return { login, signup, isSubmitting, errorMessage };
+  return { login, signup, isSubmitting };
 }

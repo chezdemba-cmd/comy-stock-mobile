@@ -23,7 +23,7 @@ import { colors, spacing, typography } from '@/constants/theme';
 
 export default function SignupScreen() {
   const { t } = useTranslation();
-  const { signup, isSubmitting, errorMessage } = useAuth();
+  const { signup, isSubmitting } = useAuth();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
@@ -37,8 +37,8 @@ export default function SignupScreen() {
 
   const onSubmit = async (values: SignupFormValues) => {
     setSubmitError(null);
-    const success = await signup(values);
-    if (success) {
+    const errorMessage = await signup(values);
+    if (!errorMessage) {
       // Passe par la porte de routage racine : c'est elle qui redirige vers
       // create-company puisqu'un tout nouveau compte n'a encore aucune entreprise.
       router.replace('/');
