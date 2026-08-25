@@ -52,7 +52,8 @@
           "photosPermission": "Comy_stock a besoin d'accéder à vos photos pour illustrer vos produits.",
           "cameraPermission": "Comy_stock a besoin de la caméra pour prendre une photo de vos produits."
         }
-      ]
+      ],
+      "expo-sharing"
     ],
     "extra": {
       "router": {}
