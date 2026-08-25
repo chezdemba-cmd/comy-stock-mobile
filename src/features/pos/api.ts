@@ -63,28 +63,6 @@ export async function addCashMovement(input: {
   if (error) throw error;
 }
 
-export async function fetchCustomers(companyId: string): Promise<Customer[]> {
-  const { data, error } = await supabase
-    .from('customers')
-    .select('*')
-    .eq('company_id', companyId)
-    .order('name');
-
-  if (error) throw error;
-  return (data ?? []) as Customer[];
-}
-
-export async function createCustomer(companyId: string, name: string, phone: string): Promise<Customer> {
-  const { data, error } = await supabase
-    .from('customers')
-    .insert({ company_id: companyId, name, phone: phone || null })
-    .select()
-    .single();
-
-  if (error) throw error;
-  return data as Customer;
-}
-
 export interface SalePaymentInput {
   method: PaymentMethod;
   amount: number;

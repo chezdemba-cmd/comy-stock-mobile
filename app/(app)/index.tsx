@@ -56,7 +56,7 @@ export default function DashboardScreen() {
           <QuickAction icon="cart" label="Nouvelle vente" onPress={() => router.push('/(app)/caisse')} />
           <QuickAction icon="cube" label="Ajouter produit" onPress={() => router.push('/(app)/produits')} />
           <QuickAction icon="wallet" label="Ajouter dépense" onPress={notImplemented} />
-          <QuickAction icon="card" label="Encaisser dette" onPress={notImplemented} />
+          <QuickAction icon="card" label="Encaisser dette" onPress={() => router.push('/(app)/plus/clients')} />
           <QuickAction icon="sparkles" label="Comy IA" onPress={() => router.push('/(app)/comy-ia')} />
         </View>
 

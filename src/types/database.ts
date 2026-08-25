@@ -165,6 +165,7 @@ export interface CustomerDebt {
   customer_id: string;
   sale_id: string | null;
   original_amount: number;
+  due_date: string | null;
   created_by: string;
   created_at: string;
 }

@@ -3,7 +3,7 @@ import { FlatList, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'r
 import { Ionicons } from '@expo/vector-icons';
 
 import { colors, radii, spacing, typography } from '@/constants/theme';
-import { useCreateCustomer, useCustomers } from '@/features/pos/hooks';
+import { useCreateCustomer, useCustomers } from '@/features/customers/hooks';
 
 interface CustomerPickerProps {
   value: string | null;

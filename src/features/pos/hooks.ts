@@ -4,9 +4,7 @@ import { useCompanyStore } from '@/stores/companyStore';
 import {
   addCashMovement,
   closeCashSession,
-  createCustomer,
   createSale,
-  fetchCustomers,
   fetchOpenSession,
   fetchSaleReceipt,
   openCashSession,
@@ -63,29 +61,6 @@ export function useAddCashMovement() {
       addCashMovement({ companyId: companyId as string, shopId: shopId as string, ...input }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cashSession', shopId] });
-    },
-  });
-}
-
-export function useCustomers() {
-  const { companyId } = useActiveScope();
-
-  return useQuery({
-    queryKey: ['customers', companyId],
-    queryFn: () => fetchCustomers(companyId as string),
-    enabled: Boolean(companyId),
-  });
-}
-
-export function useCreateCustomer() {
-  const queryClient = useQueryClient();
-  const { companyId } = useActiveScope();
-
-  return useMutation({
-    mutationFn: ({ name, phone }: { name: string; phone: string }) =>
-      createCustomer(companyId as string, name, phone),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['customers', companyId] });
     },
   });
 }
