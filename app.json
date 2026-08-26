@@ -7,7 +7,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "backgroundColor": "#071411",
+    "backgroundColor": "#15171a",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.comystock.app"
@@ -15,7 +15,7 @@
     "android": {
       "package": "com.comystock.app",
       "adaptiveIcon": {
-        "backgroundColor": "#071411",
+        "backgroundColor": "#15171a",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -35,7 +35,7 @@
           "image": "./assets/images/mark.png",
           "imageWidth": 140,
           "resizeMode": "contain",
-          "backgroundColor": "#071411"
+          "backgroundColor": "#15171a"
         }
       ],
       "expo-font",
@@ -43,20 +43,26 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Comy_stock a besoin de la caméra pour scanner les codes-barres de vos produits."
+          "cameraPermission": "Comy_stock a besoin de la caméra pour scanner les codes-barres de vos produits.",
+          "recordAudioAndroid": false
         }
       ],
       [
         "expo-image-picker",
         {
           "photosPermission": "Comy_stock a besoin d'accéder à vos photos pour illustrer vos produits.",
-          "cameraPermission": "Comy_stock a besoin de la caméra pour prendre une photo de vos produits."
+          "cameraPermission": "Comy_stock a besoin de la caméra pour prendre une photo de vos produits.",
+          "microphonePermission": false
         }
       ],
       "expo-sharing"
     ],
     "extra": {
-      "router": {}
-    }
+      "router": {},
+      "eas": {
+        "projectId": "f6477187-2f21-49bf-b0aa-c9d44880d455"
+      }
+    },
+    "owner": "chezdembas"
   }
 }
