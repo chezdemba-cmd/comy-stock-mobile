@@ -1,5 +1,16 @@
 import { useState } from 'react';
-import { FlatList, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -166,32 +177,37 @@ export default function CreatePurchaseScreen() {
       </ScrollView>
 
       <Modal visible={isPickerOpen} animationType="slide" transparent onRequestClose={() => setIsPickerOpen(false)}>
-        <Pressable style={styles.backdrop} onPress={() => setIsPickerOpen(false)}>
-          <Pressable style={styles.sheet}>
-            <Text style={styles.sheetTitle}>Choisir un produit</Text>
-            <TextInput
-              value={search}
-              onChangeText={setSearch}
-              placeholder="Rechercher..."
-              placeholderTextColor={colors.textTertiary}
-              style={styles.searchInput}
-            />
-            <FlatList
-              data={filteredProducts}
-              keyExtractor={(item) => item.id}
-              style={styles.list}
-              renderItem={({ item }) => (
-                <Pressable
-                  style={styles.option}
-                  onPress={() => addProduct(item.id, item.name, item.purchase_price)}
-                >
-                  <Text style={styles.optionLabel}>{item.name}</Text>
-                  <Text style={styles.optionMeta}>{formatMoney(item.purchase_price, currency)}</Text>
-                </Pressable>
-              )}
-            />
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+          <Pressable style={styles.backdrop} onPress={() => setIsPickerOpen(false)}>
+            <Pressable style={styles.sheet}>
+              <Text style={styles.sheetTitle}>Choisir un produit</Text>
+              <TextInput
+                value={search}
+                onChangeText={setSearch}
+                placeholder="Rechercher..."
+                placeholderTextColor={colors.textTertiary}
+                style={styles.searchInput}
+              />
+              <FlatList
+                data={filteredProducts}
+                keyExtractor={(item) => item.id}
+                style={styles.list}
+                renderItem={({ item }) => (
+                  <Pressable
+                    style={styles.option}
+                    onPress={() => addProduct(item.id, item.name, item.purchase_price)}
+                  >
+                    <Text style={styles.optionLabel}>{item.name}</Text>
+                    <Text style={styles.optionMeta}>{formatMoney(item.purchase_price, currency)}</Text>
+                  </Pressable>
+                )}
+              />
+            </Pressable>
           </Pressable>
-        </Pressable>
+        </KeyboardAvoidingView>
       </Modal>
     </ScreenContainer>
   );

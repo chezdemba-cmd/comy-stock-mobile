@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { ClientCard } from '@/components/ClientCard';
 import { EmptyState } from '@/components/EmptyState';
+import { ErrorState } from '@/components/ErrorState';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { colors, radii, spacing, typography } from '@/constants/theme';
 import { useMyMemberships } from '@/features/company/hooks';
@@ -12,7 +13,7 @@ import { useCustomers, useOutstandingDebtsByCustomer } from '@/features/customer
 import { useCompanyStore } from '@/stores/companyStore';
 
 export default function ClientsScreen() {
-  const { data: customers = [], isLoading } = useCustomers();
+  const { data: customers = [], isLoading, isError, refetch } = useCustomers();
   const { data: outstandingByCustomer = {} } = useOutstandingDebtsByCustomer();
   const { data: memberships } = useMyMemberships();
   const activeCompanyId = useCompanyStore((state) => state.activeCompanyId);
@@ -62,7 +63,9 @@ export default function ClientsScreen() {
           />
         )}
         ListEmptyComponent={
-          isLoading ? null : (
+          isLoading ? null : isError ? (
+            <ErrorState onRetry={() => refetch()} />
+          ) : (
             <EmptyState title="Aucun client" description="Ajoutez votre premier client." />
           )
         }

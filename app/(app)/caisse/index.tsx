@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { Button } from '@/components/Button';
 import { EmptyState } from '@/components/EmptyState';
+import { ErrorState } from '@/components/ErrorState';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { TextField } from '@/components/TextField';
 import { colors, radii, spacing, typography } from '@/constants/theme';
@@ -60,7 +61,7 @@ function OpenSessionScreen() {
 }
 
 function PosScreen() {
-  const { data: products = [] } = useProducts();
+  const { data: products = [], isLoading, isError, refetch } = useProducts();
   const { data: memberships } = useMyMemberships();
   const activeCompanyId = useCompanyStore((state) => state.activeCompanyId);
   const currency =
@@ -137,7 +138,11 @@ function PosScreen() {
           </Pressable>
         )}
         ListEmptyComponent={
-          <EmptyState title="Aucun produit" description="Ajoutez des produits depuis l'onglet Produits." />
+          isLoading ? null : isError ? (
+            <ErrorState onRetry={() => refetch()} />
+          ) : (
+            <EmptyState title="Aucun produit" description="Ajoutez des produits depuis l'onglet Produits." />
+          )
         }
       />
 

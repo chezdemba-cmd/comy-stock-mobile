@@ -1,10 +1,23 @@
 import { useState } from 'react';
-import { Alert, Image, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 import { Button } from '@/components/Button';
+import { ErrorState } from '@/components/ErrorState';
 import { ListRow } from '@/components/ListRow';
+import { LoadingIndicator } from '@/components/LoadingIndicator';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { StockBadge } from '@/components/StockBadge';
 import { TextField } from '@/components/TextField';
@@ -35,7 +48,7 @@ const MOVEMENT_LABEL: Record<string, string> = {
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data: product } = useProduct(id);
+  const { data: product, isLoading, isError, refetch } = useProduct(id);
   const { data: movements = [] } = useStockMovements(id);
   const { data: supplier } = useSupplier(product?.supplier_id ?? undefined);
   const { data: memberships } = useMyMemberships();
@@ -50,6 +63,22 @@ export default function ProductDetailScreen() {
   const [isAdjustOpen, setIsAdjustOpen] = useState(false);
   const [adjustAmount, setAdjustAmount] = useState('');
   const [adjustReason, setAdjustReason] = useState('');
+
+  if (isLoading) {
+    return (
+      <ScreenContainer edges={['bottom']}>
+        <LoadingIndicator fullScreen />
+      </ScreenContainer>
+    );
+  }
+
+  if (isError) {
+    return (
+      <ScreenContainer edges={['bottom']}>
+        <ErrorState onRetry={() => refetch()} />
+      </ScreenContainer>
+    );
+  }
 
   if (!product) return null;
 
@@ -168,25 +197,30 @@ export default function ProductDetailScreen() {
       </ScrollView>
 
       <Modal visible={isAdjustOpen} animationType="slide" transparent onRequestClose={() => setIsAdjustOpen(false)}>
-        <Pressable style={styles.backdrop} onPress={() => setIsAdjustOpen(false)}>
-          <Pressable style={styles.sheet}>
-            <Text style={styles.sheetTitle}>Ajuster le stock</Text>
-            <TextField
-              label="Quantité (+ ou -)"
-              placeholder="Ex. -3 ou 5"
-              keyboardType="numbers-and-punctuation"
-              value={adjustAmount}
-              onChangeText={setAdjustAmount}
-            />
-            <TextField
-              label="Raison"
-              placeholder="Ex. Casse, comptage..."
-              value={adjustReason}
-              onChangeText={setAdjustReason}
-            />
-            <Button label="Valider" onPress={submitAdjust} loading={adjustStock.isPending} />
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+          <Pressable style={styles.backdrop} onPress={() => setIsAdjustOpen(false)}>
+            <Pressable style={styles.sheet}>
+              <Text style={styles.sheetTitle}>Ajuster le stock</Text>
+              <TextField
+                label="Quantité (+ ou -)"
+                placeholder="Ex. -3 ou 5"
+                keyboardType="numbers-and-punctuation"
+                value={adjustAmount}
+                onChangeText={setAdjustAmount}
+              />
+              <TextField
+                label="Raison"
+                placeholder="Ex. Casse, comptage..."
+                value={adjustReason}
+                onChangeText={setAdjustReason}
+              />
+              <Button label="Valider" onPress={submitAdjust} loading={adjustStock.isPending} />
+            </Pressable>
           </Pressable>
-        </Pressable>
+        </KeyboardAvoidingView>
       </Modal>
     </ScreenContainer>
   );

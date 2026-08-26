@@ -3,7 +3,9 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 
 import { EmptyState } from '@/components/EmptyState';
+import { ErrorState } from '@/components/ErrorState';
 import { ListRow } from '@/components/ListRow';
+import { LoadingIndicator } from '@/components/LoadingIndicator';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { colors, radii, spacing, typography } from '@/constants/theme';
 import { useMyMemberships } from '@/features/company/hooks';
@@ -16,7 +18,7 @@ export default function ProductReportsScreen() {
   const params = useLocalSearchParams<{ from?: string; to?: string }>();
   const range = params.from && params.to ? { from: params.from, to: params.to } : getPeriodRange('month');
 
-  const { data: rows = [] } = useProductSales(range);
+  const { data: rows = [], isLoading, isError, refetch } = useProductSales(range);
   const { data: memberships } = useMyMemberships();
   const activeCompanyId = useCompanyStore((state) => state.activeCompanyId);
   const currency =
@@ -40,6 +42,22 @@ export default function ProductReportsScreen() {
     }
     return Array.from(byCategory.values()).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
   }, [rows]);
+
+  if (isLoading) {
+    return (
+      <ScreenContainer edges={['bottom']}>
+        <LoadingIndicator fullScreen />
+      </ScreenContainer>
+    );
+  }
+
+  if (isError) {
+    return (
+      <ScreenContainer edges={['bottom']}>
+        <ErrorState onRetry={() => refetch()} />
+      </ScreenContainer>
+    );
+  }
 
   if (rows.length === 0) {
     return (

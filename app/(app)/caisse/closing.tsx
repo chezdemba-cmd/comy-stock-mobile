@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 
 import { Button } from '@/components/Button';
+import { LoadingIndicator } from '@/components/LoadingIndicator';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { TextField } from '@/components/TextField';
 import { colors, radii, spacing, typography } from '@/constants/theme';
@@ -14,7 +15,7 @@ import { formatMoney } from '@/utils/money';
 import type { CashRegisterSession } from '@/types/database';
 
 export default function ClosingScreen() {
-  const { data: session } = useOpenSession();
+  const { data: session, isLoading } = useOpenSession();
   const { data: memberships } = useMyMemberships();
   const activeCompanyId = useCompanyStore((state) => state.activeCompanyId);
   const currency =
@@ -26,6 +27,14 @@ export default function ClosingScreen() {
   const [notes, setNotes] = useState('');
   const [result, setResult] = useState<CashRegisterSession | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  if (isLoading) {
+    return (
+      <ScreenContainer edges={['bottom']}>
+        <LoadingIndicator fullScreen />
+      </ScreenContainer>
+    );
+  }
 
   if (!session && !result) {
     return null;

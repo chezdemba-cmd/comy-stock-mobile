@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AppHeader } from '@/components/AppHeader';
 import { EmptyState } from '@/components/EmptyState';
 import { ListRow } from '@/components/ListRow';
+import { LoadingIndicator } from '@/components/LoadingIndicator';
 import { MoneyCard } from '@/components/MoneyCard';
 import { QuickAction } from '@/components/QuickAction';
 import { ScreenContainer } from '@/components/ScreenContainer';
@@ -30,7 +31,15 @@ export default function DashboardScreen() {
   const currency =
     memberships?.companies.find((company) => company.id === activeCompanyId)?.currency ?? 'XOF';
 
-  const { data } = useDashboardData(currency);
+  const { data, isLoading } = useDashboardData(currency);
+
+  if (isLoading) {
+    return (
+      <ScreenContainer edges={['top', 'bottom']}>
+        <LoadingIndicator fullScreen />
+      </ScreenContainer>
+    );
+  }
 
   const variationPercent = data.revenueYesterday
     ? Math.round(((data.revenueToday - data.revenueYesterday) / data.revenueYesterday) * 100)

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/Button';
@@ -53,6 +53,13 @@ export default function SyncQueueScreen() {
         ? t('offline.queueStatusError')
         : t('offline.queueStatusPending');
 
+  const confirmDiscard = (item: QueuedMutation) => {
+    Alert.alert(t('offline.discardConfirmTitle'), t('offline.discardConfirmMessage'), [
+      { text: t('offline.discardConfirmCancel'), style: 'cancel' },
+      { text: t('offline.discard'), style: 'destructive', onPress: () => discard(item.id) },
+    ]);
+  };
+
   return (
     <ScreenContainer>
       <View style={styles.list}>
@@ -68,7 +75,7 @@ export default function SyncQueueScreen() {
             {item.status === 'error' ? (
               <View style={styles.actions}>
                 <Button label={t('offline.retry')} variant="ghost" onPress={() => retry(item.id)} />
-                <Button label={t('offline.discard')} variant="ghost" onPress={() => discard(item.id)} />
+                <Button label={t('offline.discard')} variant="ghost" onPress={() => confirmDiscard(item)} />
               </View>
             ) : null}
           </View>

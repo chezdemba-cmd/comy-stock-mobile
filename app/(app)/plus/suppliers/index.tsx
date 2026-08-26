@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 import { EmptyState } from '@/components/EmptyState';
+import { ErrorState } from '@/components/ErrorState';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { SupplierCard } from '@/components/SupplierCard';
 import { colors, radii, spacing, typography } from '@/constants/theme';
@@ -12,7 +13,7 @@ import { useOutstandingDebtsBySupplier, useSuppliers } from '@/features/supplier
 import { useCompanyStore } from '@/stores/companyStore';
 
 export default function SuppliersScreen() {
-  const { data: suppliers = [], isLoading } = useSuppliers();
+  const { data: suppliers = [], isLoading, isError, refetch } = useSuppliers();
   const { data: outstandingBySupplier = {} } = useOutstandingDebtsBySupplier();
   const { data: memberships } = useMyMemberships();
   const activeCompanyId = useCompanyStore((state) => state.activeCompanyId);
@@ -62,7 +63,9 @@ export default function SuppliersScreen() {
           />
         )}
         ListEmptyComponent={
-          isLoading ? null : (
+          isLoading ? null : isError ? (
+            <ErrorState onRetry={() => refetch()} />
+          ) : (
             <EmptyState title="Aucun fournisseur" description="Ajoutez votre premier fournisseur." />
           )
         }

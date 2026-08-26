@@ -4,7 +4,9 @@ import { router } from 'expo-router';
 
 import { Button } from '@/components/Button';
 import { EmptyState } from '@/components/EmptyState';
+import { ErrorState } from '@/components/ErrorState';
 import { ListRow } from '@/components/ListRow';
+import { LoadingIndicator } from '@/components/LoadingIndicator';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { TextField } from '@/components/TextField';
 import { colors, radii, spacing, typography } from '@/constants/theme';
@@ -16,7 +18,7 @@ import { useCompanyStore } from '@/stores/companyStore';
 import { formatMoney } from '@/utils/money';
 
 export default function RegisterScreen() {
-  const { data: session } = useOpenSession();
+  const { data: session, isLoading, isError, refetch } = useOpenSession();
   const { data: memberships } = useMyMemberships();
   const activeCompanyId = useCompanyStore((state) => state.activeCompanyId);
   const currency =
@@ -27,6 +29,22 @@ export default function RegisterScreen() {
   const [movementType, setMovementType] = useState<'in' | 'out'>('out');
   const [amount, setAmount] = useState('');
   const [reason, setReason] = useState('');
+
+  if (isLoading) {
+    return (
+      <ScreenContainer edges={['bottom']}>
+        <LoadingIndicator fullScreen />
+      </ScreenContainer>
+    );
+  }
+
+  if (isError) {
+    return (
+      <ScreenContainer edges={['bottom']}>
+        <ErrorState onRetry={() => refetch()} />
+      </ScreenContainer>
+    );
+  }
 
   if (!session) {
     return (

@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 import { EmptyState } from '@/components/EmptyState';
+import { ErrorState } from '@/components/ErrorState';
 import { ListRow } from '@/components/ListRow';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { colors, radii, spacing, typography } from '@/constants/theme';
@@ -14,7 +15,7 @@ import { useCompanyStore } from '@/stores/companyStore';
 import { formatMoney } from '@/utils/money';
 
 export default function ExpensesScreen() {
-  const { data: expenses = [], isLoading } = useExpenses();
+  const { data: expenses = [], isLoading, isError, refetch } = useExpenses();
   const { data: memberships } = useMyMemberships();
   const activeCompanyId = useCompanyStore((state) => state.activeCompanyId);
   const currency =
@@ -87,7 +88,11 @@ export default function ExpensesScreen() {
           />
         )}
         ListEmptyComponent={
-          isLoading ? null : <EmptyState title="Aucune dépense" description="Ajoutez votre première dépense." />
+          isLoading ? null : isError ? (
+            <ErrorState onRetry={() => refetch()} />
+          ) : (
+            <EmptyState title="Aucune dépense" description="Ajoutez votre première dépense." />
+          )
         }
       />
     </ScreenContainer>

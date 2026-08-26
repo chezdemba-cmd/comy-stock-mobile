@@ -51,8 +51,6 @@
     "more": "Plus"
   },
   "common": {
-    "comingSoon": "Bientôt disponible",
-    "comingSoonDetail": "Cet écran sera construit dans une prochaine phase.",
     "logout": "Se déconnecter"
   },
   "offline": {
@@ -69,6 +67,9 @@
     "queueStatusError": "Échec",
     "retry": "Réessayer",
     "discard": "Ignorer",
+    "discardConfirmTitle": "Ignorer cette opération ?",
+    "discardConfirmMessage": "Elle sera définitivement supprimée et ne sera jamais synchronisée.",
+    "discardConfirmCancel": "Annuler",
     "typeCreateSale": "Vente",
     "typeAddCashMovement": "Mouvement de caisse",
     "typeCreateExpense": "Dépense",

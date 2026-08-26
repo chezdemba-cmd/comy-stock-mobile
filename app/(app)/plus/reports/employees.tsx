@@ -2,7 +2,9 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 
 import { EmptyState } from '@/components/EmptyState';
+import { ErrorState } from '@/components/ErrorState';
 import { ListRow } from '@/components/ListRow';
+import { LoadingIndicator } from '@/components/LoadingIndicator';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { colors, radii, spacing } from '@/constants/theme';
 import { useMyMemberships } from '@/features/company/hooks';
@@ -15,11 +17,27 @@ export default function EmployeeReportsScreen() {
   const params = useLocalSearchParams<{ from?: string; to?: string }>();
   const range = params.from && params.to ? { from: params.from, to: params.to } : getPeriodRange('month');
 
-  const { data: rows = [] } = useEmployeeSales(range);
+  const { data: rows = [], isLoading, isError, refetch } = useEmployeeSales(range);
   const { data: memberships } = useMyMemberships();
   const activeCompanyId = useCompanyStore((state) => state.activeCompanyId);
   const currency =
     memberships?.companies.find((company) => company.id === activeCompanyId)?.currency ?? 'XOF';
+
+  if (isLoading) {
+    return (
+      <ScreenContainer edges={['bottom']}>
+        <LoadingIndicator fullScreen />
+      </ScreenContainer>
+    );
+  }
+
+  if (isError) {
+    return (
+      <ScreenContainer edges={['bottom']}>
+        <ErrorState onRetry={() => refetch()} />
+      </ScreenContainer>
+    );
+  }
 
   if (rows.length === 0) {
     return (

@@ -1,9 +1,21 @@
 import { useState } from 'react';
-import { Linking, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Linking,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 
 import { Button } from '@/components/Button';
+import { ErrorState } from '@/components/ErrorState';
 import { ListRow } from '@/components/ListRow';
+import { LoadingIndicator } from '@/components/LoadingIndicator';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { TextField } from '@/components/TextField';
 import { colors, radii, spacing, typography } from '@/constants/theme';
@@ -21,7 +33,7 @@ import { formatMoney } from '@/utils/money';
 
 export default function ClientDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data: customer } = useCustomer(id);
+  const { data: customer, isLoading, isError, refetch } = useCustomer(id);
   const { data: stats } = useCustomerStats(id);
   const { data: debtSummary } = useCustomerDebtSummary(id);
   const { data: memberships } = useMyMemberships();
@@ -36,6 +48,22 @@ export default function ClientDetailScreen() {
   const [isPayOpen, setIsPayOpen] = useState(false);
   const [payAmount, setPayAmount] = useState('');
   const [payError, setPayError] = useState<string | null>(null);
+
+  if (isLoading) {
+    return (
+      <ScreenContainer edges={['bottom']}>
+        <LoadingIndicator fullScreen />
+      </ScreenContainer>
+    );
+  }
+
+  if (isError) {
+    return (
+      <ScreenContainer edges={['bottom']}>
+        <ErrorState onRetry={() => refetch()} />
+      </ScreenContainer>
+    );
+  }
 
   if (!customer) return null;
 
@@ -141,21 +169,26 @@ export default function ClientDetailScreen() {
       </ScrollView>
 
       <Modal visible={isPayOpen} animationType="slide" transparent onRequestClose={() => setIsPayOpen(false)}>
-        <Pressable style={styles.backdrop} onPress={() => setIsPayOpen(false)}>
-          <Pressable style={styles.sheet}>
-            <Text style={styles.sheetTitle}>Encaisser un paiement</Text>
-            <Text style={styles.sheetSubtitle}>Solde dû : {formatMoney(outstanding, currency)}</Text>
-            <TextField
-              label="Montant reçu"
-              placeholder="0"
-              keyboardType="numeric"
-              value={payAmount}
-              onChangeText={setPayAmount}
-            />
-            {payError ? <Text style={styles.formError}>{payError}</Text> : null}
-            <Button label="Valider" onPress={submitPayment} loading={payDebt.isPending} />
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+          <Pressable style={styles.backdrop} onPress={() => setIsPayOpen(false)}>
+            <Pressable style={styles.sheet}>
+              <Text style={styles.sheetTitle}>Encaisser un paiement</Text>
+              <Text style={styles.sheetSubtitle}>Solde dû : {formatMoney(outstanding, currency)}</Text>
+              <TextField
+                label="Montant reçu"
+                placeholder="0"
+                keyboardType="numeric"
+                value={payAmount}
+                onChangeText={setPayAmount}
+              />
+              {payError ? <Text style={styles.formError}>{payError}</Text> : null}
+              <Button label="Valider" onPress={submitPayment} loading={payDebt.isPending} />
+            </Pressable>
           </Pressable>
-        </Pressable>
+        </KeyboardAvoidingView>
       </Modal>
     </ScreenContainer>
   );

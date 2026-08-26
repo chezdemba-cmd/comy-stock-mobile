@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 import { EmptyState } from '@/components/EmptyState';
+import { ErrorState } from '@/components/ErrorState';
 import { ProductCard } from '@/components/ProductCard';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { colors, radii, spacing, typography } from '@/constants/theme';
@@ -20,7 +21,7 @@ const STATUS_FILTERS: { value: StockStatus | 'all'; label: string }[] = [
 ];
 
 export default function ProductsScreen() {
-  const { data: products = [], isLoading } = useProducts();
+  const { data: products = [], isLoading, isError, refetch } = useProducts();
   const { data: categories = [] } = useCategories();
   const { data: memberships } = useMyMemberships();
   const activeCompanyId = useCompanyStore((state) => state.activeCompanyId);
@@ -129,7 +130,9 @@ export default function ProductsScreen() {
           />
         )}
         ListEmptyComponent={
-          isLoading ? null : (
+          isLoading ? null : isError ? (
+            <ErrorState onRetry={() => refetch()} />
+          ) : (
             <EmptyState
               title="Aucun produit"
               description="Ajoutez votre premier produit pour commencer à vendre."
