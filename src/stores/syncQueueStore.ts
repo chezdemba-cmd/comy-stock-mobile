@@ -33,7 +33,11 @@ interface SyncQueueState {
   remove: (id: string) => void;
   retry: (id: string) => void;
   discard: (id: string) => void;
+  recoverStaleSyncing: () => void;
 }
+
+const STALE_SYNCING_MESSAGE =
+  "Synchronisation interrompue (l'application a été fermée pendant l'envoi). Vérifiez si l'opération a bien été enregistrée avant de réessayer, pour éviter un doublon.";
 
 export const useSyncQueueStore = create<SyncQueueState>()(
   persist(
@@ -64,6 +68,21 @@ export const useSyncQueueStore = create<SyncQueueState>()(
       },
       discard: (id) => {
         set({ items: get().items.filter((item) => item.id !== id) });
+      },
+      // Un item encore "syncing" au rechargement de la file persistée ne peut être que
+      // orphelin : rien ne peut être "en cours" après un redémarrage du process JS
+      // (isProcessing, en mémoire, repart forcément à false). On ne le relance jamais
+      // automatiquement (on ignore si le serveur avait déjà traité la requête avant le
+      // crash — un retry silencieux risquerait une vente en double) : on le fait
+      // apparaître en erreur pour que l'utilisateur vérifie puis choisisse lui-même.
+      recoverStaleSyncing: () => {
+        set({
+          items: get().items.map((item) =>
+            item.status === 'syncing'
+              ? { ...item, status: 'error', errorMessage: STALE_SYNCING_MESSAGE }
+              : item
+          ),
+        });
       },
     }),
     {

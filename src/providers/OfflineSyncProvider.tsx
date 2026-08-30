@@ -6,6 +6,7 @@ import { persistQueryClient } from '@tanstack/react-query-persist-client';
 
 import { queryClient } from '@/services/queryClient';
 import { processQueue } from '@/services/syncQueue';
+import { useSyncQueueStore } from '@/stores/syncQueueStore';
 
 let hasSetUp = false;
 
@@ -30,7 +31,19 @@ export function OfflineSyncProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    processQueue();
+    // La file persistée (zustand/AsyncStorage) se recharge de façon asynchrone : il faut
+    // attendre qu'elle soit vraiment là avant de nettoyer les items "syncing" orphelins
+    // d'une session précédente et de relancer le traitement, sinon on agirait sur une
+    // file encore vide et manquerait les opérations en attente au démarrage à froid.
+    const startProcessing = () => {
+      useSyncQueueStore.getState().recoverStaleSyncing();
+      processQueue();
+    };
+    if (useSyncQueueStore.persist.hasHydrated()) {
+      startProcessing();
+    } else {
+      useSyncQueueStore.persist.onFinishHydration(startProcessing);
+    }
 
     let subscription: { remove: () => void } | undefined;
     try {
