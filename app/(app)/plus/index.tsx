@@ -13,6 +13,7 @@ const MENU_ITEMS = [
   { label: 'Clients', icon: 'people-outline' as const, href: '/(app)/plus/clients' as const },
   { label: 'Fournisseurs', icon: 'briefcase-outline' as const, href: '/(app)/plus/suppliers' as const },
   { label: 'Dépenses', icon: 'wallet-outline' as const, href: '/(app)/plus/expenses' as const },
+  { label: 'Équipe', icon: 'person-add-outline' as const, href: '/(app)/plus/team' as const },
   { label: 'Rapports', icon: 'bar-chart-outline' as const, href: '/(app)/plus/reports' as const },
   { label: 'Abonnement', icon: 'star-outline' as const, href: '/(app)/plus/subscription' as const },
   { label: 'Synchronisation', icon: 'sync-outline' as const, href: '/(app)/plus/sync-queue' as const },

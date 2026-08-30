@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -128,6 +128,13 @@ export default function CreateCompanyScreen() {
           {submitError ? <Text style={styles.formError}>{submitError}</Text> : null}
 
           <Button label="Continuer" onPress={handleSubmit(onSubmit)} loading={isPending} style={styles.submit} />
+
+          <Pressable
+            style={styles.joinLink}
+            onPress={() => router.push('/(onboarding)/join-company')}
+          >
+            <Text style={styles.joinLinkText}>J&apos;ai un code d&apos;invitation</Text>
+          </Pressable>
         </ScrollView>
       </ScreenContainer>
     </KeyboardAvoidingView>
@@ -161,6 +168,15 @@ const styles = StyleSheet.create({
   },
   submit: {
     marginTop: spacing.md,
+  },
+  joinLink: {
+    alignSelf: 'center',
+    marginTop: spacing.lg,
     marginBottom: spacing.xxl,
+  },
+  joinLinkText: {
+    color: colors.green,
+    fontFamily: typography.fontBodyMedium,
+    fontSize: 14,
   },
 });

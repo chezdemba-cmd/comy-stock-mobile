@@ -344,6 +344,22 @@ export interface AiMessage {
   created_at: string;
 }
 
+export type InvitationStatus = 'pending' | 'accepted' | 'revoked';
+
+export interface Invitation {
+  id: string;
+  company_id: string;
+  shop_id: string;
+  role: AppRole;
+  code: string;
+  status: InvitationStatus;
+  invited_by: string;
+  accepted_by: string | null;
+  accepted_at: string | null;
+  expires_at: string;
+  created_at: string;
+}
+
 export interface SubscriptionUsage {
   plan: PlanTier;
   shops_used: number;
