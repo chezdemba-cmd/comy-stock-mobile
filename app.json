@@ -55,7 +55,8 @@
           "microphonePermission": false
         }
       ],
-      "expo-sharing"
+      "expo-sharing",
+      "@sentry/react-native/expo"
     ],
     "extra": {
       "router": {},

@@ -13,10 +13,11 @@ import { colors } from '@/constants/theme';
 import { useAuthSession } from '@/hooks/useAuthSession';
 import { OfflineSyncProvider } from '@/providers/OfflineSyncProvider';
 import { queryClient } from '@/services/queryClient';
+import { Sentry } from '@/services/sentry';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
-export default function RootLayout() {
+function RootLayout() {
   const [poppinsLoaded] = usePoppinsFonts({ Poppins_600SemiBold, Poppins_700Bold });
   const [dmSansLoaded] = useDmSansFonts({ DMSans_400Regular, DMSans_500Medium });
   const fontsLoaded = poppinsLoaded && dmSansLoaded;
@@ -50,3 +51,8 @@ export default function RootLayout() {
     </SafeAreaProvider>
   );
 }
+
+// Sentry.wrap active le suivi automatique des écrans/gestes en plus de la capture des
+// erreurs (déjà installée par Sentry.init dans services/sentry.ts) ; sans DSN configuré,
+// c'est un no-op transparent.
+export default Sentry.wrap(RootLayout);
