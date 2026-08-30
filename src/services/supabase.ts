@@ -25,5 +25,10 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,
+    // PKCE plutôt que le flux implicite par défaut : sur mobile, il n'y a pas de barre
+    // d'adresse pour porter un fragment #access_token=..., donc le lien de réinitialisation
+    // de mot de passe (reset-password.tsx) doit recevoir un ?code=... échangeable via
+    // exchangeCodeForSession — c'est ce que documente Supabase pour React Native/Expo.
+    flowType: 'pkce',
   },
 });

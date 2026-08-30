@@ -22,7 +22,24 @@
       "submit": "Se connecter",
       "noAccount": "Pas encore de compte ?",
       "goToSignup": "Créer un compte",
-      "errorInvalid": "Email ou mot de passe incorrect."
+      "errorInvalid": "Email ou mot de passe incorrect.",
+      "forgotPassword": "Mot de passe oublié ?"
+    },
+    "forgotPassword": {
+      "title": "Mot de passe oublié",
+      "subtitle": "Indiquez votre email, nous vous envoyons un lien pour le réinitialiser.",
+      "submit": "Envoyer le lien",
+      "success": "Si un compte existe avec cet email, un lien de réinitialisation vient de lui être envoyé.",
+      "backToLogin": "Retour à la connexion"
+    },
+    "resetPassword": {
+      "title": "Nouveau mot de passe",
+      "subtitle": "Choisissez un nouveau mot de passe pour votre compte.",
+      "passwordLabel": "Nouveau mot de passe",
+      "passwordPlaceholder": "8 caractères minimum",
+      "submit": "Enregistrer",
+      "checkingLink": "Vérification du lien…",
+      "invalidLink": "Ce lien de réinitialisation est invalide ou a expiré. Demandez-en un nouveau depuis l'écran de connexion."
     },
     "signup": {
       "title": "Créer un compte",
