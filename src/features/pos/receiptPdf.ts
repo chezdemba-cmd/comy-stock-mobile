@@ -13,6 +13,18 @@ const PAYMENT_LABEL: Record<string, string> = {
   credit: 'Crédit',
 };
 
+// Le HTML du reçu est construit par concaténation puis rendu par expo-print :
+// tout texte saisi par l'utilisateur (nom de produit, de boutique, de client,
+// du vendeur) doit être échappé, sinon un « & » ou un « < » casse le rendu.
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export function buildReceiptHtml(receipt: SaleReceipt, shopName: string, currency: string): string {
   const { sale, items, payments, customer, sellerName } = receipt;
   const date = new Date(sale.created_at).toLocaleString('fr-FR');
@@ -21,7 +33,7 @@ export function buildReceiptHtml(receipt: SaleReceipt, shopName: string, currenc
     .map(
       (item) => `
         <tr>
-          <td>${item.product_name}</td>
+          <td>${escapeHtml(item.product_name)}</td>
           <td style="text-align:center">${item.quantity}</td>
           <td style="text-align:right">${formatMoney(item.unit_price, currency)}</td>
           <td style="text-align:right">${formatMoney(item.line_total, currency)}</td>
@@ -32,7 +44,7 @@ export function buildReceiptHtml(receipt: SaleReceipt, shopName: string, currenc
   const paymentRows = payments
     .map(
       (payment) =>
-        `<div class="payment-row"><span>${PAYMENT_LABEL[payment.method] ?? payment.method}</span><span>${formatMoney(payment.amount, currency)}</span></div>`
+        `<div class="payment-row"><span>${escapeHtml(PAYMENT_LABEL[payment.method] ?? payment.method)}</span><span>${formatMoney(payment.amount, currency)}</span></div>`
     )
     .join('');
 
@@ -53,10 +65,10 @@ export function buildReceiptHtml(receipt: SaleReceipt, shopName: string, currenc
         </style>
       </head>
       <body>
-        <h1>${shopName}</h1>
-        <div class="muted">Reçu #${sale.sale_number} · ${date}</div>
-        ${sellerName ? `<div class="muted">Vendeur : ${sellerName}</div>` : ''}
-        ${customer ? `<div class="muted">Client : ${customer.name}</div>` : ''}
+        <h1>${escapeHtml(shopName)}</h1>
+        <div class="muted">Reçu #${sale.sale_number} · ${escapeHtml(date)}</div>
+        ${sellerName ? `<div class="muted">Vendeur : ${escapeHtml(sellerName)}</div>` : ''}
+        ${customer ? `<div class="muted">Client : ${escapeHtml(customer.name)}</div>` : ''}
 
         <table>
           <thead>

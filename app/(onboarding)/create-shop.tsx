@@ -62,7 +62,7 @@ export default function CreateShopScreen() {
             render={({ field: { onChange, onBlur, value } }) => (
               <TextField
                 label="Nom de la boutique"
-                placeholder="Ex. Djeli Shop Cocody"
+                placeholder="Ex. Bamako Commerce ACI 2000"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -77,7 +77,7 @@ export default function CreateShopScreen() {
             render={({ field: { onChange, onBlur, value } }) => (
               <TextField
                 label="Localisation"
-                placeholder="Ex. Cocody, Angré"
+                placeholder="Ex. ACI 2000, Bamako"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -92,7 +92,7 @@ export default function CreateShopScreen() {
             render={({ field: { onChange, onBlur, value } }) => (
               <TextField
                 label="Téléphone"
-                placeholder="Ex. 07 00 00 00 00"
+                placeholder="Ex. +223 70 00 00 00"
                 keyboardType="phone-pad"
                 onBlur={onBlur}
                 onChangeText={onChange}

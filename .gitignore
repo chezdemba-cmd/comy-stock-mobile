@@ -32,6 +32,9 @@ yarn-error.*
 
 # local env files
 .env
+
+# Local Android builds downloaded for device testing
+*.apk
 .env*.local
 
 # typescript

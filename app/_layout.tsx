@@ -2,11 +2,14 @@ import { useCallback, useEffect } from 'react';
 import { View } from 'react-native';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { useFonts as usePoppinsFonts, Poppins_600SemiBold, Poppins_700Bold } from '@expo-google-fonts/poppins';
-import { useFonts as useDmSansFonts, DMSans_400Regular, DMSans_500Medium } from '@expo-google-fonts/dm-sans';
+import { Poppins_600SemiBold } from '@expo-google-fonts/poppins/600SemiBold';
+import { Poppins_700Bold } from '@expo-google-fonts/poppins/700Bold';
+import { DMSans_400Regular } from '@expo-google-fonts/dm-sans/400Regular';
+import { DMSans_500Medium } from '@expo-google-fonts/dm-sans/500Medium';
 
 import '@/i18n';
 import { colors } from '@/constants/theme';
@@ -18,9 +21,12 @@ import { Sentry } from '@/services/sentry';
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 function RootLayout() {
-  const [poppinsLoaded] = usePoppinsFonts({ Poppins_600SemiBold, Poppins_700Bold });
-  const [dmSansLoaded] = useDmSansFonts({ DMSans_400Regular, DMSans_500Medium });
-  const fontsLoaded = poppinsLoaded && dmSansLoaded;
+  const [fontsLoaded] = useFonts({
+    Poppins_600SemiBold,
+    Poppins_700Bold,
+    DMSans_400Regular,
+    DMSans_500Medium,
+  });
 
   useAuthSession();
 

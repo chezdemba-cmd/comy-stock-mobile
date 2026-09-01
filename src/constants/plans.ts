@@ -64,4 +64,4 @@ export const PLANS: Record<PlanTier, PlanDefinition> = {
   },
 };
 
-export const SUPPORT_WHATSAPP_NUMBER = '2250508294939';
+export const SUPPORT_WHATSAPP_NUMBER = process.env.EXPO_PUBLIC_SUPPORT_WHATSAPP_NUMBER?.trim() ?? '';

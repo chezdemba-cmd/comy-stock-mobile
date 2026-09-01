@@ -21,7 +21,7 @@ export const expenseFormSchema = z.object({
     .string()
     .min(1, 'Le montant est requis.')
     .refine((value) => !Number.isNaN(Number(value)) && Number(value) > 0, 'Le montant doit être positif.'),
-  category: z.string().min(1, 'La catégorie est requise.'),
+  category: z.string().trim().min(1, 'La catégorie est requise.'),
   description: z.string().optional(),
 });
 

@@ -7,16 +7,19 @@ function numericString(message: string) {
     .refine((value) => !Number.isNaN(Number(value)) && Number(value) >= 0, message);
 }
 
+const optionalNumericString = (message: string) =>
+  z.string().refine((value) => value === '' || (!Number.isNaN(Number(value)) && Number(value) >= 0), message).optional();
+
 export const productFormSchema = z.object({
-  name: z.string().min(1, 'Le nom du produit est requis.'),
+  name: z.string().trim().min(1, 'Le nom du produit est requis.'),
   categoryId: z.string().nullable(),
   sku: z.string().optional(),
   barcode: z.string().optional(),
   purchasePrice: numericString("Le prix d'achat doit être un nombre positif."),
   salePrice: numericString('Le prix de vente doit être un nombre positif.'),
-  initialStock: z.string().optional(),
+  initialStock: optionalNumericString('Le stock initial doit être un nombre positif.'),
   stockMin: numericString('Le stock minimum doit être un nombre positif.'),
-  unit: z.string().min(1, "L'unité est requise."),
+  unit: z.string().trim().min(1, "L'unité est requise."),
   description: z.string().optional(),
 });
 

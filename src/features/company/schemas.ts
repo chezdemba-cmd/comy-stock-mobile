@@ -22,9 +22,9 @@ export const currencyOptions = [
 ];
 
 export const createCompanySchema = z.object({
-  name: z.string().min(1, 'Le nom du commerce est requis.'),
-  country: z.string().min(1, 'Le pays est requis.'),
-  city: z.string().min(1, 'La ville est requise.'),
+  name: z.string().trim().min(1, 'Le nom du commerce est requis.'),
+  country: z.string().trim().min(1, 'Le pays est requis.'),
+  city: z.string().trim().min(1, 'La ville est requise.'),
   currency: z.string().min(1, 'Choisissez une devise.'),
   businessType: z.string().min(1, "Choisissez un type d'activité."),
 });
@@ -32,9 +32,9 @@ export const createCompanySchema = z.object({
 export type CreateCompanyFormValues = z.infer<typeof createCompanySchema>;
 
 export const createShopSchema = z.object({
-  name: z.string().min(1, 'Le nom de la boutique est requis.'),
-  location: z.string().min(1, 'La localisation est requise.'),
-  phone: z.string().min(1, 'Le téléphone est requis.'),
+  name: z.string().trim().min(1, 'Le nom de la boutique est requis.'),
+  location: z.string().trim().min(1, 'La localisation est requise.'),
+  phone: z.string().trim().min(1, 'Le téléphone est requis.'),
   address: z.string().optional(),
 });
 

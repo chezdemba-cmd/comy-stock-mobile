@@ -77,7 +77,7 @@ Fond : deux `radial-gradient` verts sur `#071411`. Deux colonnes.
 - Visuel : `img/hero-phone.png`, largeur max 380px, halo radial flouté derrière, animation `floaty` (translateY 0 → -14px, 7s, ease-in-out, infinie, désactivée en `prefers-reduced-motion`).
 
 ### 3. Bandeau de chiffres
-Quatre cellules séparées par 1px de `rgba(47,168,92,0.18)`, dans un bloc à bordure et rayon 22px : **2023** Année de création · **10** Boutiques par compte Pro · **0 F** Pour commencer · **CI** Conçue à Abidjan.
+Quatre cellules séparées par 1px de `rgba(47,168,92,0.18)`, dans un bloc à bordure et rayon 22px : **2023** Année de création · **10** Boutiques par compte Pro · **0 F** Pour commencer · **ML** Conçue à Bamako.
 
 ### 4. Fonctionnalités (`#features`)
 Sur-titre « Fonctionnalités », H2 « Ce que Comy Stock résout pour vous », intro « Moins de matériel, moins de coûts… ». Trois cartes numérotées 01/02/03 (pastille 46×46, rayon 14px) :
@@ -114,7 +114,7 @@ Chaque ligne est précédée d'une puce 6×6 `#d4af37`.
 Bloc centré, rayon 30px, halo vert. H2 « Prêt à piloter votre boutique ? », sous-titre « Téléchargez Comy Stock et commencez gratuitement dès aujourd'hui. », bouton blanc « Play Store » + bouton bordé « Nous écrire sur WhatsApp ».
 
 ### 9. Footer
-Quatre colonnes : lockup `img/logo.png` (200px) + « Chaque entrepreneur mérite des outils puissants, quelle que soit la taille de sa boutique. » · Application (Fonctionnalités, L'app, Tarifs) · Ressources (À propos, Contact WhatsApp) · Légal (Confidentialité, Conditions d'utilisation). Ligne de bas de page : « © 2026 Comy Stock — Eso-dev, Abidjan. Tous droits réservés. »
+Quatre colonnes : lockup `img/logo.png` (200px) + « Chaque entrepreneur mérite des outils puissants, quelle que soit la taille de sa boutique. » · Application (Fonctionnalités, L'app, Tarifs) · Ressources (À propos, Contact WhatsApp) · Légal (Confidentialité, Conditions d'utilisation). Ligne de bas de page : « © 2026 Comy Stock — Eso-dev, Bamako. Tous droits réservés. »
 
 ## Interactions
 - Ancres avec défilement fluide (`scroll-behavior: smooth`) et `scroll-margin-top` égal à la hauteur du header.
@@ -129,7 +129,7 @@ Un seul : `billing: 'monthly' | 'yearly'` (défaut `monthly`). Aucune donnée di
 ## Liens à confirmer par le client
 - Play Store : le lien actuel pointe vers `com.djeli.app` — remplacer par l'identifiant Comy_stock.
 - Confidentialité / Conditions : pointent vers `sites.djeli.pro` — remplacer.
-- WhatsApp : `https://wa.me/2250508294939`.
+- WhatsApp : `https://wa.me/223XXXXXXXX` (à remplacer par le véritable numéro de support malien).
 - App Store : pas encore de lien (bouton désactivé).
 
 ## Assets

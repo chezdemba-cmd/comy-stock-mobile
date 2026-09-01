@@ -38,13 +38,13 @@ let isProcessing = false;
 export async function processQueue(): Promise<void> {
   if (isProcessing) return;
 
-  const network = await Network.getNetworkStateAsync();
-  if (!network.isConnected || network.isInternetReachable === false) return;
-
   isProcessing = true;
   try {
+    const network = await Network.getNetworkStateAsync();
+    if (!network.isConnected || network.isInternetReachable === false) return;
+
     const store = useSyncQueueStore.getState();
-    const pendingItems = store.items.filter((item) => item.status !== 'syncing');
+    const pendingItems = store.items.filter((item) => item.status === 'pending');
 
     for (const item of pendingItems) {
       store.markSyncing(item.id);

@@ -4,7 +4,7 @@ import * as Network from 'expo-network';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
 
-import { queryClient } from '@/services/queryClient';
+import { queryClient, QUERY_CACHE_PERSIST_KEY } from '@/services/queryClient';
 import { processQueue } from '@/services/syncQueue';
 import { useSyncQueueStore } from '@/stores/syncQueueStore';
 
@@ -19,7 +19,7 @@ export function OfflineSyncProvider({ children }: { children: ReactNode }) {
       try {
         const persister = createAsyncStoragePersister({
           storage: AsyncStorage,
-          key: 'comy-stock/query-cache',
+          key: QUERY_CACHE_PERSIST_KEY,
         });
         persistQueryClient({
           queryClient,

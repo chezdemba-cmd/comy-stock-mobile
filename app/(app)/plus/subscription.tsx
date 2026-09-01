@@ -1,4 +1,4 @@
-import { Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { Button } from '@/components/Button';
@@ -38,6 +38,14 @@ export default function SubscriptionScreen() {
   const isOwner = role === 'owner';
 
   const requestUpgrade = (targetPlan: PlanTier) => {
+    if (!SUPPORT_WHATSAPP_NUMBER) {
+      Alert.alert(
+        'Contact indisponible',
+        "Le numéro WhatsApp du support n'est pas encore configuré.",
+      );
+      return;
+    }
+
     const message = buildUpgradeRequestMessage(companyName, PLANS[targetPlan].label);
     Linking.openURL(buildWhatsAppUrl(SUPPORT_WHATSAPP_NUMBER, message));
   };

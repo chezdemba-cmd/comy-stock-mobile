@@ -31,7 +31,7 @@ export function ClientForm({ control, errors }: ClientFormProps) {
         render={({ field: { onChange, onBlur, value } }) => (
           <TextField
             label="Téléphone"
-            placeholder="Ex. 07 00 00 00 00"
+            placeholder="Ex. +223 70 00 00 00"
             keyboardType="phone-pad"
             onBlur={onBlur}
             onChangeText={onChange}
@@ -45,7 +45,7 @@ export function ClientForm({ control, errors }: ClientFormProps) {
         render={({ field: { onChange, onBlur, value } }) => (
           <TextField
             label="WhatsApp (si différent)"
-            placeholder="Ex. 07 00 00 00 00"
+            placeholder="Ex. +223 70 00 00 00"
             keyboardType="phone-pad"
             onBlur={onBlur}
             onChangeText={onChange}
@@ -74,7 +74,7 @@ export function ClientForm({ control, errors }: ClientFormProps) {
         render={({ field: { onChange, onBlur, value } }) => (
           <TextField
             label="Adresse (facultatif)"
-            placeholder="Ex. Cocody, Angré"
+            placeholder="Ex. ACI 2000, Bamako"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}

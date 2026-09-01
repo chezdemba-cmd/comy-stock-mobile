@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { supabase } from '@/services/supabase';
+import { clearLocalSession } from '@/features/auth/signOut';
 import { useAuthStore } from '@/stores/authStore';
 
 /**
@@ -16,8 +17,13 @@ export function useAuthSession() {
       setInitializing(false);
     });
 
-    const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: subscription } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
+      // Couvre aussi la déconnexion non explicite (token expiré, refresh échoué) :
+      // le SDK émet SIGNED_OUT sans passer par notre écran de déconnexion.
+      if (event === 'SIGNED_OUT') {
+        void clearLocalSession();
+      }
     });
 
     return () => {

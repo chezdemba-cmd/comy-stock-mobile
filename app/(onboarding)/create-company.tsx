@@ -58,7 +58,7 @@ export default function CreateCompanyScreen() {
             render={({ field: { onChange, onBlur, value } }) => (
               <TextField
                 label="Nom du commerce"
-                placeholder="Ex. Djeli Shop"
+                placeholder="Ex. Bamako Commerce"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -73,7 +73,7 @@ export default function CreateCompanyScreen() {
             render={({ field: { onChange, onBlur, value } }) => (
               <TextField
                 label="Pays"
-                placeholder="Ex. Côte d'Ivoire"
+                placeholder="Ex. Mali"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -88,7 +88,7 @@ export default function CreateCompanyScreen() {
             render={({ field: { onChange, onBlur, value } }) => (
               <TextField
                 label="Ville"
-                placeholder="Ex. Abidjan"
+                placeholder="Ex. Bamako"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}

@@ -5,8 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/Button';
 import { ScreenContainer } from '@/components/ScreenContainer';
-import { supabase } from '@/services/supabase';
-import { useCompanyStore } from '@/stores/companyStore';
+import { signOut } from '@/features/auth/signOut';
 import { colors, radii, spacing, typography } from '@/constants/theme';
 
 const MENU_ITEMS = [
@@ -21,11 +20,9 @@ const MENU_ITEMS = [
 
 export default function PlusScreen() {
   const { t } = useTranslation();
-  const clearCompanyStore = useCompanyStore((state) => state.clear);
 
   const onLogout = async () => {
-    await supabase.auth.signOut();
-    clearCompanyStore();
+    await signOut();
     router.replace('/(onboarding)/welcome');
   };
 
