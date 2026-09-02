@@ -293,7 +293,13 @@ Deno.serve(async (req: Request) => {
 
     const { data: company } = await supabase.from('companies').select('currency, name').eq('id', companyId).single();
 
-    const anthropic = new Anthropic({ apiKey: Deno.env.get('ANTHROPIC_API_KEY') });
+    const anthropicWorkspaceId = Deno.env.get('ANTHROPIC_WORKSPACE_ID');
+    const anthropic = new Anthropic({
+      apiKey: Deno.env.get('ANTHROPIC_API_KEY'),
+      defaultHeaders: anthropicWorkspaceId
+        ? { 'anthropic-workspace-id': anthropicWorkspaceId }
+        : undefined,
+    });
 
     const systemPrompt = `Tu es Comy IA, l'assistant financier et commercial intégré à l'application Comy_stock, conçu pour le contexte commercial malien, pour la boutique en cours de l'entreprise "${company?.name ?? ''}" (devise : ${company?.currency ?? 'XOF'}).
 Tu réponds UNIQUEMENT aux questions sur les données de cette entreprise et de cette boutique — tes outils sont déjà limités à ce périmètre par le système, tu n'as accès à rien d'autre.

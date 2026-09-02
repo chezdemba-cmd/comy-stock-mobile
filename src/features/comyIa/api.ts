@@ -41,6 +41,12 @@ export async function sendMessage(input: SendMessageInput): Promise<SendMessageR
       if (body?.error === 'quota_exceeded') {
         throw new QuotaExceededError(body.message as string, body.aiPeriod as 'day' | 'month');
       }
+      if (typeof body?.message === 'string') {
+        throw new Error(body.message);
+      }
+      if (typeof body?.error === 'string') {
+        throw new Error(body.error);
+      }
     }
     throw error;
   }
