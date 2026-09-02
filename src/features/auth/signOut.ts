@@ -19,21 +19,23 @@ import { useSyncQueueStore } from '@/stores/syncQueueStore';
  */
 export async function clearLocalSession(): Promise<void> {
   queryClient.clear();
-  useSyncQueueStore.persist.clearStorage();
   useSyncQueueStore.setState({ items: [] });
   useCartStore.getState().clear();
   useCompanyStore.getState().clear();
 
-  try {
-    await AsyncStorage.removeItem(QUERY_CACHE_PERSIST_KEY);
-  } catch {
-    // Purge best-effort : le queryClient.clear() en mémoire suffit à masquer les
-    // données ; la copie disque restante sera de toute façon écrasée à la
-    // prochaine connexion.
-  }
+  // Les deux suppressions disque sont indépendantes et best-effort. Une panne
+  // d'AsyncStorage ne doit jamais empêcher la purge mémoire ci-dessus ni
+  // bloquer l'autre suppression persistée.
+  await Promise.allSettled([
+    useSyncQueueStore.persist.clearStorage(),
+    AsyncStorage.removeItem(QUERY_CACHE_PERSIST_KEY),
+  ]);
 }
 
 export async function signOut(): Promise<void> {
-  await supabase.auth.signOut();
-  await clearLocalSession();
+  try {
+    await supabase.auth.signOut();
+  } finally {
+    await clearLocalSession();
+  }
 }

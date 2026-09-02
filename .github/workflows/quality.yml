@@ -36,6 +36,11 @@ jobs:
 
       - name: Production web bundle
         run: npm run build:web
+        env:
+          # Valeurs factices réservées à la compilation CI. Les vrais identifiants
+          # sont fournis par l'environnement de déploiement/EAS.
+          EXPO_PUBLIC_SUPABASE_URL: https://ci-placeholder.supabase.co
+          EXPO_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder-anon-key
 
       - name: Expo Doctor
         run: npx expo-doctor

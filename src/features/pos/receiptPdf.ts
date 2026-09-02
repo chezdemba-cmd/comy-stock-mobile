@@ -25,6 +25,10 @@ function escapeHtml(value: string): string {
     .replace(/'/g, '&#39;');
 }
 
+function formatMoneyHtml(amount: number, currency: string): string {
+  return escapeHtml(formatMoney(amount, currency));
+}
+
 export function buildReceiptHtml(receipt: SaleReceipt, shopName: string, currency: string): string {
   const { sale, items, payments, customer, sellerName } = receipt;
   const date = new Date(sale.created_at).toLocaleString('fr-FR');
@@ -35,8 +39,8 @@ export function buildReceiptHtml(receipt: SaleReceipt, shopName: string, currenc
         <tr>
           <td>${escapeHtml(item.product_name)}</td>
           <td style="text-align:center">${item.quantity}</td>
-          <td style="text-align:right">${formatMoney(item.unit_price, currency)}</td>
-          <td style="text-align:right">${formatMoney(item.line_total, currency)}</td>
+          <td style="text-align:right">${formatMoneyHtml(item.unit_price, currency)}</td>
+          <td style="text-align:right">${formatMoneyHtml(item.line_total, currency)}</td>
         </tr>`
     )
     .join('');
@@ -44,7 +48,7 @@ export function buildReceiptHtml(receipt: SaleReceipt, shopName: string, currenc
   const paymentRows = payments
     .map(
       (payment) =>
-        `<div class="payment-row"><span>${escapeHtml(PAYMENT_LABEL[payment.method] ?? payment.method)}</span><span>${formatMoney(payment.amount, currency)}</span></div>`
+        `<div class="payment-row"><span>${escapeHtml(PAYMENT_LABEL[payment.method] ?? payment.method)}</span><span>${formatMoneyHtml(payment.amount, currency)}</span></div>`
     )
     .join('');
 
@@ -78,9 +82,9 @@ export function buildReceiptHtml(receipt: SaleReceipt, shopName: string, currenc
         </table>
 
         <div class="totals">
-          <div><span>Sous-total</span><span>${formatMoney(sale.subtotal, currency)}</span></div>
-          ${sale.discount_amount > 0 ? `<div><span>Réduction</span><span>-${formatMoney(sale.discount_amount, currency)}</span></div>` : ''}
-          <div class="total-line"><span>Total</span><span>${formatMoney(sale.total, currency)}</span></div>
+          <div><span>Sous-total</span><span>${formatMoneyHtml(sale.subtotal, currency)}</span></div>
+          ${sale.discount_amount > 0 ? `<div><span>Réduction</span><span>-${formatMoneyHtml(sale.discount_amount, currency)}</span></div>` : ''}
+          <div class="total-line"><span>Total</span><span>${formatMoneyHtml(sale.total, currency)}</span></div>
         </div>
 
         <div style="margin-top:16px">${paymentRows}</div>

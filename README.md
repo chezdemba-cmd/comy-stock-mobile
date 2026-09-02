@@ -38,6 +38,8 @@ EXPO_PUBLIC_SUPPORT_WHATSAPP_NUMBER=223XXXXXXXX
 
 Les variables `EXPO_PUBLIC_*` sont intégrées à l'application cliente. Ne jamais y placer une clé Supabase `service_role` ni un autre secret serveur.
 
+Un bundle de production refuse désormais de démarrer si l'URL ou la clé anonyme Supabase manque. Le client factice n'est autorisé qu'en développement local.
+
 Le numéro de support doit utiliser le format international malien sans `+` ni espaces. Remplacer `223XXXXXXXX` par le véritable numéro de l'entreprise.
 
 ## Base de données Supabase
@@ -87,6 +89,8 @@ eas build --profile production --platform ios
 Le profil `preview` produit un APK interne. Le profil `production` produit un Android App Bundle ; le format iOS est géré par EAS.
 
 Sentry est initialisé par `EXPO_PUBLIC_SENTRY_DSN`. L'upload automatique est actuellement désactivé dans les profils EAS : configurer les identifiants Sentry et réactiver l'upload des source maps avant une publication publique.
+
+Pour activer les source maps, définir `SENTRY_ORG` et `SENTRY_PROJECT` dans l'environnement de build, créer `SENTRY_AUTH_TOKEN` comme secret EAS, puis retirer `SENTRY_DISABLE_AUTO_UPLOAD` du profil `production`. Sans ces variables, Metro utilise automatiquement sa configuration Expo standard et n'affiche pas d'avertissement Sentry trompeur.
 
 ## Publication
 

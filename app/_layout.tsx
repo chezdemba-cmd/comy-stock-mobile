@@ -21,7 +21,7 @@ import { Sentry } from '@/services/sentry';
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 function RootLayout() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontsError] = useFonts({
     Poppins_600SemiBold,
     Poppins_700Bold,
     DMSans_400Regular,
@@ -30,17 +30,25 @@ function RootLayout() {
 
   useAuthSession();
 
+  const fontsReady = fontsLoaded || Boolean(fontsError);
+
   const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
+    if (fontsReady) {
       await SplashScreen.hideAsync();
     }
-  }, [fontsLoaded]);
+  }, [fontsReady]);
 
   useEffect(() => {
     onLayoutRootView();
   }, [onLayoutRootView]);
 
-  if (!fontsLoaded) {
+  useEffect(() => {
+    if (fontsError) {
+      console.warn('[fonts] Chargement des polices impossible, utilisation des polices système.', fontsError);
+    }
+  }, [fontsError]);
+
+  if (!fontsReady) {
     return null;
   }
 

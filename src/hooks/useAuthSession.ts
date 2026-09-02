@@ -12,10 +12,19 @@ export function useAuthSession() {
   const setInitializing = useAuthStore((state) => state.setInitializing);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setInitializing(false);
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data, error }) => {
+        if (error) {
+          console.warn('[auth] Lecture de la session impossible :', error.message);
+        }
+        setSession(data.session);
+      })
+      .catch((error) => {
+        console.warn('[auth] Initialisation de la session impossible :', error);
+        setSession(null);
+      })
+      .finally(() => setInitializing(false));
 
     const { data: subscription } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);

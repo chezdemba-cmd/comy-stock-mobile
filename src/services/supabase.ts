@@ -6,6 +6,13 @@ const envUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const envAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!envUrl || !envAnonKey) {
+  if (!__DEV__) {
+    throw new Error(
+      '[supabase] Configuration de production absente : EXPO_PUBLIC_SUPABASE_URL et ' +
+        'EXPO_PUBLIC_SUPABASE_ANON_KEY sont obligatoires.'
+    );
+  }
+
   console.warn(
     '[supabase] EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY manquants. ' +
       'Copiez .env.example vers .env et renseignez vos identifiants Supabase. ' +
@@ -14,8 +21,8 @@ if (!envUrl || !envAnonKey) {
 }
 
 // createClient() lève une exception si l'URL est vide/invalide (pas juste un avertissement) :
-// sans identifiants réels on retombe sur une URL factice mais valide pour que l'app démarre
-// quand même (onboarding, connexion...) au lieu de planter au chargement.
+// En développement uniquement, une URL factice permet d'afficher l'interface
+// avant d'avoir configuré le projet. Un bundle de production échoue plus haut.
 const supabaseUrl = envUrl || 'https://placeholder.supabase.co';
 const supabaseAnonKey = envAnonKey || 'placeholder-anon-key';
 

@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { Redirect } from 'expo-router';
 
+import { ErrorState } from '@/components/ErrorState';
 import { useMyMemberships } from '@/features/company/hooks';
 import { colors } from '@/constants/theme';
 import { useAuthStore } from '@/stores/authStore';
@@ -28,7 +29,12 @@ export default function RootIndex() {
   const activeShopId = useCompanyStore((state) => state.activeShopId);
   const setActiveCompany = useCompanyStore((state) => state.setActiveCompany);
   const setActiveShop = useCompanyStore((state) => state.setActiveShop);
-  const { data: memberships, isLoading: membershipsLoading } = useMyMemberships();
+  const {
+    data: memberships,
+    isLoading: membershipsLoading,
+    isError: membershipsError,
+    refetch: refetchMemberships,
+  } = useMyMemberships();
 
   const shops = useMemo(() => memberships?.shops ?? [], [memberships]);
   const activeShopStillValid = shops.some((shop) => shop.id === activeShopId);
@@ -46,6 +52,16 @@ export default function RootIndex() {
 
   if (!session) {
     return <Redirect href="/(onboarding)/welcome" />;
+  }
+
+  if (membershipsError && !memberships) {
+    return (
+      <ErrorState
+        title="Impossible de charger votre entreprise"
+        description="Vérifiez votre connexion internet, puis réessayez."
+        onRetry={() => void refetchMemberships()}
+      />
+    );
   }
 
   if (membershipsLoading || !memberships) {

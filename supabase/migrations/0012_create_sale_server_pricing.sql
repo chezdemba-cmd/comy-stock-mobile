@@ -15,6 +15,8 @@
 --   - p_discount_amount est la SEULE entrée monétaire libre, bornée à [0, subtotal]
 --   - la vente est rejetée si le sous-total client s'écarte du sous-total serveur
 --     (catalogue périmé → l'app doit rafraîchir le panier)
+--   - boutique, affectation utilisateur et client sont validés explicitement
+--   - chaque paiement doit être strictement positif
 -- La signature est inchangée : le client continue d'envoyer ses valeurs, elles ne
 -- servent plus qu'au contrôle de cohérence.
 
@@ -39,6 +41,7 @@ declare
   v_sale_number integer;
   v_item jsonb;
   v_payment jsonb;
+  v_payment_amount numeric;
   v_credit_total numeric := 0;
   v_payments_total numeric := 0;
   v_product products;
@@ -50,6 +53,27 @@ declare
 begin
   if company_role(p_company_id) not in ('owner', 'manager', 'cashier') then
     raise exception 'Vous n''avez pas les droits pour enregistrer une vente.';
+  end if;
+
+  if not exists (
+    select 1 from shops
+    where id = p_shop_id and company_id = p_company_id
+  ) then
+    raise exception 'Cette boutique n''appartient pas à cette entreprise.';
+  end if;
+
+  if not exists (
+    select 1 from shop_members
+    where shop_id = p_shop_id and user_id = auth.uid()
+  ) then
+    raise exception 'Vous n''êtes pas affecté à cette boutique.';
+  end if;
+
+  if p_customer_id is not null and not exists (
+    select 1 from customers
+    where id = p_customer_id and company_id = p_company_id
+  ) then
+    raise exception 'Ce client n''appartient pas à cette entreprise.';
   end if;
 
   select id into v_session_id
@@ -100,9 +124,14 @@ begin
 
   for v_payment in select * from jsonb_array_elements(p_payments)
   loop
-    v_payments_total := v_payments_total + (v_payment ->> 'amount')::numeric;
+    v_payment_amount := (v_payment ->> 'amount')::numeric;
+    if v_payment_amount is null or v_payment_amount <= 0 then
+      raise exception 'Le montant de chaque paiement doit être strictement positif.';
+    end if;
+
+    v_payments_total := v_payments_total + v_payment_amount;
     if (v_payment ->> 'method') = 'credit' then
-      v_credit_total := v_credit_total + (v_payment ->> 'amount')::numeric;
+      v_credit_total := v_credit_total + v_payment_amount;
     end if;
   end loop;
 
