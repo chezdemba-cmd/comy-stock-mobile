@@ -6,6 +6,7 @@ import { customerFormSchema } from './customers/schemas';
 import { expenseFormSchema } from './expenses/schemas';
 import { productFormSchema } from './products/schemas';
 import { supplierFormSchema } from './suppliers/schemas';
+import { invitableRoles } from './team/schemas';
 
 const validProduct = {
   name: 'Riz local',
@@ -56,5 +57,10 @@ describe('validation des formulaires', () => {
   it('exige un montant de dépense strictement positif', () => {
     expect(expenseFormSchema.safeParse({ amount: '0', category: 'transport', description: '' }).success).toBe(false);
     expect(expenseFormSchema.safeParse({ amount: '2500', category: 'transport', description: '' }).success).toBe(true);
+  });
+
+  it('donne au comptable responsable les mêmes invitations qu’au manager', () => {
+    expect(invitableRoles('accountant')).toEqual(invitableRoles('manager'));
+    expect(invitableRoles('accountant')).toEqual(['cashier', 'stock_manager', 'accountant']);
   });
 });

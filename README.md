@@ -11,6 +11,8 @@ Application mobile de gestion de boutique construite avec Expo SDK 57, Expo Rout
 - rapports, gestion d'équipe et limites d'abonnement ;
 - file de synchronisation hors ligne ;
 - assistant Comy IA via une Supabase Edge Function.
+- équipe multi-boutiques avec rôles modifiables par le propriétaire ;
+- notifications internes de chaque mouvement de stock aux propriétaires et comptables responsables.
 
 ## Prérequis
 

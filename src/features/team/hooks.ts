@@ -10,6 +10,9 @@ import {
   inviteMember,
   removeMember,
   revokeInvite,
+  updateMemberRole,
+  assignMemberToShop,
+  removeMemberFromShop,
   type InviteMemberInput,
 } from './api';
 
@@ -19,6 +22,36 @@ export function useTeamMembers() {
     queryKey: ['teamMembers', activeCompanyId],
     queryFn: () => fetchTeamMembers(activeCompanyId as string),
     enabled: Boolean(activeCompanyId),
+  });
+}
+
+export function useUpdateMemberRole() {
+  const queryClient = useQueryClient();
+  const companyId = useCompanyStore((state) => state.activeCompanyId);
+  return useMutation({
+    mutationFn: ({ userId, role }: { userId: string; role: Parameters<typeof updateMemberRole>[2] }) =>
+      updateMemberRole(companyId as string, userId, role),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['teamMembers', companyId] }),
+  });
+}
+
+export function useAssignMemberToShop() {
+  const queryClient = useQueryClient();
+  const companyId = useCompanyStore((state) => state.activeCompanyId);
+  return useMutation({
+    mutationFn: ({ userId, shopId }: { userId: string; shopId: string }) =>
+      assignMemberToShop(companyId as string, userId, shopId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['teamMembers', companyId] }),
+  });
+}
+
+export function useRemoveMemberFromShop() {
+  const queryClient = useQueryClient();
+  const companyId = useCompanyStore((state) => state.activeCompanyId);
+  return useMutation({
+    mutationFn: ({ userId, shopId }: { userId: string; shopId: string }) =>
+      removeMemberFromShop(companyId as string, userId, shopId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['teamMembers', companyId] }),
   });
 }
 

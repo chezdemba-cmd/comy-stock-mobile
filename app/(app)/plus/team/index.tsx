@@ -20,7 +20,8 @@ import {
 
 export default function TeamScreen() {
   const role = useActiveCompanyRole();
-  const canManage = role === 'owner' || role === 'manager';
+  const canManage = role === 'owner' || role === 'manager' || role === 'accountant';
+  const canConfigure = role === 'owner';
   const currentUserId = useAuthStore((state) => state.session?.user.id);
 
   const { data: members, isLoading, isError, refetch } = useTeamMembers();
@@ -104,15 +105,25 @@ export default function TeamScreen() {
               <ListRow
                 icon="person-outline"
                 title={member.fullName || member.email || 'Utilisateur'}
-                subtitle={roleLabel[member.role]}
+                subtitle={`${roleLabel[member.role]} · ${member.shopIds.length} boutique${member.shopIds.length > 1 ? 's' : ''}`}
               />
               {canManage && member.userId !== currentUserId ? (
-                <Button
-                  label="Retirer"
-                  variant="ghost"
-                  onPress={() => confirmRemove(member.userId, member.fullName || member.email || 'ce membre')}
-                  style={styles.rowAction}
-                />
+                <View style={styles.pendingActions}>
+                  {canConfigure ? (
+                    <Button
+                      label="Gérer"
+                      variant="ghost"
+                      onPress={() => router.push(`/(app)/plus/team/${member.userId}`)}
+                      style={styles.rowAction}
+                    />
+                  ) : null}
+                  <Button
+                    label="Retirer"
+                    variant="ghost"
+                    onPress={() => confirmRemove(member.userId, member.fullName || member.email || 'ce membre')}
+                    style={styles.rowAction}
+                  />
+                </View>
               ) : null}
             </View>
           ))

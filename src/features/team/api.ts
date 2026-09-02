@@ -6,6 +6,7 @@ export interface TeamMember {
   role: AppRole;
   fullName: string | null;
   email: string | null;
+  shopIds: string[];
 }
 
 export async function fetchTeamMembers(companyId: string): Promise<TeamMember[]> {
@@ -17,6 +18,25 @@ export async function fetchTeamMembers(companyId: string): Promise<TeamMember[]>
   if (error) throw error;
 
   const userIds = (members ?? []).map((row) => row.user_id as string);
+
+  const { data: shops, error: shopsError } = await supabase.from('shops').select('id').eq('company_id', companyId);
+  if (shopsError) throw shopsError;
+  const shopIds = (shops ?? []).map((shop) => shop.id as string);
+
+  let assignmentsByUser = new Map<string, string[]>();
+  if (shopIds.length > 0 && userIds.length > 0) {
+    const { data: assignments, error: assignmentsError } = await supabase
+      .from('shop_members')
+      .select('user_id, shop_id')
+      .in('shop_id', shopIds)
+      .in('user_id', userIds);
+    if (assignmentsError) throw assignmentsError;
+    assignmentsByUser = (assignments ?? []).reduce<Map<string, string[]>>((map, row) => {
+      const userId = row.user_id as string;
+      map.set(userId, [...(map.get(userId) ?? []), row.shop_id as string]);
+      return map;
+    }, new Map());
+  }
 
   // Requête séparée plutôt qu'un embed PostgREST : company_members et profiles référencent
   // tous les deux auth.users indépendamment, il n'y a pas de foreign key directe entre eux
@@ -39,8 +59,36 @@ export async function fetchTeamMembers(companyId: string): Promise<TeamMember[]>
       role: member.role as AppRole,
       fullName: profile?.full_name ?? null,
       email: profile?.email ?? null,
+      shopIds: assignmentsByUser.get(member.user_id as string) ?? [],
     };
   });
+}
+
+export async function updateMemberRole(companyId: string, userId: string, role: AppRole): Promise<void> {
+  const { error } = await supabase.rpc('update_member_role', {
+    p_company_id: companyId,
+    p_user_id: userId,
+    p_role: role,
+  });
+  if (error) throw error;
+}
+
+export async function assignMemberToShop(companyId: string, userId: string, shopId: string): Promise<void> {
+  const { error } = await supabase.rpc('assign_member_to_shop', {
+    p_company_id: companyId,
+    p_user_id: userId,
+    p_shop_id: shopId,
+  });
+  if (error) throw error;
+}
+
+export async function removeMemberFromShop(companyId: string, userId: string, shopId: string): Promise<void> {
+  const { error } = await supabase.rpc('remove_member_from_shop', {
+    p_company_id: companyId,
+    p_user_id: userId,
+    p_shop_id: shopId,
+  });
+  if (error) throw error;
 }
 
 export async function fetchPendingInvitations(companyId: string): Promise<Invitation[]> {

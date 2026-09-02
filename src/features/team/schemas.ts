@@ -7,7 +7,7 @@ export const roleLabel: Record<AppRole, string> = {
   manager: 'Manager',
   cashier: 'Caissier',
   stock_manager: 'Gestionnaire de stock',
-  accountant: 'Comptable',
+  accountant: 'Comptable responsable',
 };
 
 export const roleOptions = (Object.keys(roleLabel) as AppRole[]).map((value) => ({

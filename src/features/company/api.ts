@@ -34,6 +34,16 @@ export async function fetchMyMemberships(userId: string): Promise<Memberships> {
   return { companies, shops, companyRoles };
 }
 
+export async function fetchCompanyShops(companyId: string): Promise<Shop[]> {
+  const { data, error } = await supabase
+    .from('shops')
+    .select('*')
+    .eq('company_id', companyId)
+    .order('name');
+  if (error) throw error;
+  return (data ?? []) as Shop[];
+}
+
 export interface CreateCompanyInput {
   name: string;
   country: string;

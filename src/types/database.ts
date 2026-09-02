@@ -100,6 +100,21 @@ export interface StockMovement {
   created_at: string;
 }
 
+export interface UserNotification {
+  id: string;
+  company_id: string;
+  shop_id: string;
+  recipient_id: string;
+  stock_movement_id: string;
+  product_id: string;
+  movement_type: StockMovementType;
+  quantity_change: number;
+  title: string;
+  message: string;
+  read_at: string | null;
+  created_at: string;
+}
+
 export interface StockLevel {
   id: string;
   company_id: string;

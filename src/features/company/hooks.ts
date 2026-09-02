@@ -6,6 +6,7 @@ import type { AppRole } from '@/types/database';
 import {
   createCompany,
   createShop,
+  fetchCompanyShops,
   fetchMyMemberships,
   type CreateCompanyInput,
   type CreateShopInput,
@@ -20,6 +21,15 @@ export function useMyMemberships() {
     queryKey: myMembershipsKey(userId),
     queryFn: () => fetchMyMemberships(userId as string),
     enabled: Boolean(userId),
+  });
+}
+
+export function useCompanyShops() {
+  const companyId = useCompanyStore((state) => state.activeCompanyId);
+  return useQuery({
+    queryKey: ['companyShops', companyId],
+    queryFn: () => fetchCompanyShops(companyId as string),
+    enabled: Boolean(companyId),
   });
 }
 
@@ -48,8 +58,9 @@ export function useCreateShop() {
 
   return useMutation({
     mutationFn: (input: CreateShopInput) => createShop(input),
-    onSuccess: () => {
+    onSuccess: (_shop, input) => {
       queryClient.invalidateQueries({ queryKey: myMembershipsKey(userId) });
+      queryClient.invalidateQueries({ queryKey: ['companyShops', input.companyId] });
     },
   });
 }

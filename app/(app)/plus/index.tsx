@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/Button';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { signOut } from '@/features/auth/signOut';
+import { useNotifications } from '@/features/notifications/hooks';
+import { useActiveCompanyRole } from '@/features/company/hooks';
 import { colors, radii, spacing, typography } from '@/constants/theme';
 
 const MENU_ITEMS = [
@@ -16,10 +18,14 @@ const MENU_ITEMS = [
   { label: 'Rapports', icon: 'bar-chart-outline' as const, href: '/(app)/plus/reports' as const },
   { label: 'Abonnement', icon: 'star-outline' as const, href: '/(app)/plus/subscription' as const },
   { label: 'Synchronisation', icon: 'sync-outline' as const, href: '/(app)/plus/sync-queue' as const },
+  { label: 'Notifications', icon: 'notifications-outline' as const, href: '/(app)/plus/notifications' as const },
 ];
 
 export default function PlusScreen() {
   const { t } = useTranslation();
+  const role = useActiveCompanyRole();
+  const { data: notifications = [] } = useNotifications();
+  const unreadNotifications = notifications.filter((item) => !item.read_at).length;
 
   const onLogout = async () => {
     await signOut();
@@ -32,12 +38,16 @@ export default function PlusScreen() {
         <Text style={styles.title}>{t('nav.more')}</Text>
 
         <View style={styles.menu}>
-          {MENU_ITEMS.map((item) => (
+          {MENU_ITEMS.filter((item) => item.label !== 'Notifications' || role === 'owner' || role === 'accountant').map((item) => (
             <Pressable key={item.href} style={styles.menuItem} onPress={() => router.push(item.href)}>
               <View style={styles.menuIcon}>
                 <Ionicons name={item.icon} size={18} color={colors.green} />
               </View>
-              <Text style={styles.menuLabel}>{item.label}</Text>
+              <Text style={styles.menuLabel}>
+                {item.label === 'Notifications' && unreadNotifications > 0
+                  ? `${item.label} (${unreadNotifications})`
+                  : item.label}
+              </Text>
               <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
             </Pressable>
           ))}
