@@ -25,7 +25,7 @@ import { colors, radii, spacing, typography } from '@/constants/theme';
 import { useMyMemberships } from '@/features/company/hooks';
 import {
   useAdjustStock,
-  useDeleteProduct,
+  useArchiveProduct,
   useProduct,
   useStockMovements,
 } from '@/features/products/hooks';
@@ -57,7 +57,7 @@ export default function ProductDetailScreen() {
     memberships?.companies.find((company) => company.id === activeCompanyId)?.currency ?? 'XOF';
 
   const adjustStock = useAdjustStock(id as string);
-  const deleteProduct = useDeleteProduct();
+  const archiveProduct = useArchiveProduct();
   const { isOnline } = useNetworkStatus();
 
   const [isAdjustOpen, setIsAdjustOpen] = useState(false);
@@ -95,20 +95,20 @@ export default function ProductDetailScreen() {
     setAdjustReason('');
   };
 
-  const confirmDelete = () => {
-    Alert.alert('Supprimer ce produit ?', 'Cette action est irréversible.', [
+  const confirmArchive = () => {
+    Alert.alert('Archiver ce produit ?', 'Il disparaîtra du catalogue, de la caisse et du scanner. Son historique sera conservé.', [
       { text: 'Annuler', style: 'cancel' },
       {
-        text: 'Supprimer',
+        text: 'Archiver',
         style: 'destructive',
         onPress: async () => {
           try {
             if (!isOnline) throw new Error('Connexion requise pour cette action.');
-            await deleteProduct.mutateAsync(product.id);
+            await archiveProduct.mutateAsync(product.id);
             router.back();
           } catch (error) {
             Alert.alert(
-              'Impossible de supprimer',
+              "Impossible d'archiver",
               error instanceof Error ? error.message : 'Une erreur est survenue.'
             );
           }
@@ -173,7 +173,7 @@ export default function ProductDetailScreen() {
             style={styles.actionButton}
           />
         </View>
-        <Button label="Supprimer" variant="ghost" onPress={confirmDelete} />
+        <Button label="Archiver" variant="ghost" onPress={confirmArchive} loading={archiveProduct.isPending} />
 
         <Text style={styles.sectionTitle}>Derniers mouvements</Text>
         {movements.length === 0 ? (

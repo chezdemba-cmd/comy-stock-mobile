@@ -73,6 +73,7 @@ export interface Product {
   supplier_id: string | null;
   description: string | null;
   photo_url: string | null;
+  archived_at: string | null;
   created_by: string;
   created_at: string;
   updated_at: string;

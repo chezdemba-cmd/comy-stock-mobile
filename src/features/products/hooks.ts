@@ -7,7 +7,7 @@ import {
   adjustStock,
   createCategory,
   createProduct,
-  deleteProduct,
+  archiveProduct,
   fetchCategories,
   fetchProductById,
   fetchProducts,
@@ -92,12 +92,12 @@ export function useUpdateProduct(productId: string) {
   });
 }
 
-export function useDeleteProduct() {
+export function useArchiveProduct() {
   const queryClient = useQueryClient();
   const { companyId, shopId } = useActiveScope();
 
   return useMutation({
-    mutationFn: (productId: string) => deleteProduct(productId),
+    mutationFn: (productId: string) => archiveProduct(productId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products', companyId, shopId] });
     },

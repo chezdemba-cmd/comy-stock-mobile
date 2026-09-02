@@ -7,7 +7,12 @@ export interface ProductWithStock extends Product {
 
 export async function fetchProducts(companyId: string, shopId: string): Promise<ProductWithStock[]> {
   const [productsResult, stockResult] = await Promise.all([
-    supabase.from('products').select('*').eq('company_id', companyId).order('name'),
+    supabase
+      .from('products')
+      .select('*')
+      .eq('company_id', companyId)
+      .is('archived_at', null)
+      .order('name'),
     supabase.from('stock_levels').select('*').eq('company_id', companyId).eq('shop_id', shopId),
   ]);
 
@@ -133,8 +138,8 @@ export async function updateProduct(productId: string, input: ProductEditInput):
   return data as Product;
 }
 
-export async function deleteProduct(productId: string): Promise<void> {
-  const { error } = await supabase.from('products').delete().eq('id', productId);
+export async function archiveProduct(productId: string): Promise<void> {
+  const { error } = await supabase.rpc('archive_product', { p_product_id: productId });
   if (error) throw error;
 }
 
