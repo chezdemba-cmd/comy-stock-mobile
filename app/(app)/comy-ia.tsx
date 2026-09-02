@@ -28,6 +28,8 @@ const SUGGESTED_QUESTIONS = [
   'Quel produit risque d\'être en rupture ?',
 ];
 
+const MAX_MESSAGE_LENGTH = 2_000;
+
 export default function ComyIAScreen() {
   const { data } = useLatestConversation();
   const sendMessage = useSendMessage();
@@ -116,6 +118,7 @@ export default function ComyIAScreen() {
             placeholder="Écrivez à Comy IA..."
             placeholderTextColor={colors.textTertiary}
             multiline
+            maxLength={MAX_MESSAGE_LENGTH}
             onSubmitEditing={() => submit(input)}
           />
           <Pressable

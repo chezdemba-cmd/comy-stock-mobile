@@ -24,6 +24,9 @@ interface RequestBody {
   message: string;
 }
 
+const MAX_MESSAGE_LENGTH = 2_000;
+const MAX_TOOL_ITERATIONS = 4;
+
 function toIsoDate(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
@@ -132,12 +135,16 @@ async function executeTool(
         p_end: range.to,
       });
       if (error) throw error;
-      const limit = (input.limit as number) || 5;
+      const limit = Math.min(Math.max(Number(input.limit) || 5, 1), 10);
       return [...(data ?? [])].sort((a: any, b: any) => b.quantity_sold - a.quantity_sold).slice(0, limit);
     }
     case 'get_low_stock_products': {
       const [productsResult, stockResult] = await Promise.all([
-        supabase.from('products').select('id, name, stock_min').eq('company_id', companyId),
+        supabase
+          .from('products')
+          .select('id, name, stock_min')
+          .eq('company_id', companyId)
+          .is('archived_at', null),
         supabase.from('stock_levels').select('product_id, quantity').eq('company_id', companyId).eq('shop_id', shopId),
       ]);
       if (productsResult.error) throw productsResult.error;
@@ -218,12 +225,22 @@ Deno.serve(async (req: Request) => {
     }
 
     const body: RequestBody = await req.json();
-    const { companyId, shopId, message } = body;
+    const { companyId, shopId } = body;
+    const message = typeof body.message === 'string' ? body.message.trim() : '';
     if (!companyId || !shopId || !message) {
       return new Response(JSON.stringify({ error: 'Requête invalide.' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
+    }
+    if (message.length > MAX_MESSAGE_LENGTH) {
+      return new Response(
+        JSON.stringify({
+          error: 'message_too_long',
+          message: `Votre message dépasse la limite de ${MAX_MESSAGE_LENGTH} caractères.`,
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     // Contrôle de quota avant tout appel à Claude (chaque message coûte de l'argent en API
@@ -289,10 +306,10 @@ Tu ne peux STRICTEMENT rien modifier, supprimer ou créer : tu n'as accès qu'à
     }));
 
     let finalText = '';
-    for (let iteration = 0; iteration < 6; iteration++) {
+    for (let iteration = 0; iteration < MAX_TOOL_ITERATIONS; iteration++) {
       const response = await anthropic.messages.create({
-        model: 'claude-opus-5',
-        max_tokens: 2048,
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1024,
         system: systemPrompt,
         tools,
         messages,
