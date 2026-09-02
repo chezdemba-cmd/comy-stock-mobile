@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -9,6 +9,7 @@ import { TextField } from '@/components/TextField';
 import { colors, radii, spacing, typography } from '@/constants/theme';
 import { useMyMemberships } from '@/features/company/hooks';
 import { useCreateSale } from '@/features/pos/hooks';
+import { useProducts } from '@/features/products/hooks';
 import { cartSubtotal, useCartStore } from '@/stores/cartStore';
 import { useCompanyStore } from '@/stores/companyStore';
 import type { PaymentMethod } from '@/types/database';
@@ -46,6 +47,7 @@ export default function PaymentScreen() {
   const [lines, setLines] = useState<PaymentLine[]>([{ method: 'cash', amount: String(total) }]);
   const [error, setError] = useState<string | null>(null);
   const createSale = useCreateSale();
+  const { data: products = [] } = useProducts();
 
   const paidTotal = useMemo(() => lines.reduce((sum, line) => sum + (Number(line.amount) || 0), 0), [lines]);
   const remaining = Math.round((total - paidTotal) * 100) / 100;
@@ -64,19 +66,8 @@ export default function PaymentScreen() {
     setLines((prev) => prev.filter((line) => line.method !== method));
   };
 
-  const onConfirm = async () => {
-    setError(null);
-
-    if (remaining !== 0) {
-      setError('La somme des paiements doit être égale au total.');
-      return;
-    }
-    if (hasCredit && !customerId) {
-      setError('Un client est requis pour une vente à crédit.');
-      return;
-    }
+  const completeSale = async () => {
     if (!activeCompanyId || !activeShopId) return;
-
     try {
       const result = await createSale.mutateAsync({
         companyId: activeCompanyId,
@@ -100,6 +91,43 @@ export default function PaymentScreen() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue.');
     }
+  };
+
+  const onConfirm = () => {
+    setError(null);
+
+    if (remaining !== 0) {
+      setError('La somme des paiements doit être égale au total.');
+      return;
+    }
+    if (hasCredit && !customerId) {
+      setError('Un client est requis pour une vente à crédit.');
+      return;
+    }
+    if (!activeCompanyId || !activeShopId) return;
+
+    const stockByProduct = new Map(products.map((product) => [product.id, product.quantity]));
+    const insufficientItems = items.filter(
+      (item) => item.quantity > (stockByProduct.get(item.productId) ?? 0),
+    );
+
+    if (insufficientItems.length > 0) {
+      const details = insufficientItems
+        .slice(0, 5)
+        .map((item) => `${item.name} : demandé ${item.quantity}, disponible ${stockByProduct.get(item.productId) ?? 0}`)
+        .join('\n');
+      Alert.alert(
+        'Stock insuffisant',
+        `${details}${insufficientItems.length > 5 ? '\n…' : ''}\n\nLe stock deviendra négatif. Vérifiez la quantité ou confirmez la vente.`,
+        [
+          { text: 'Vérifier', style: 'cancel' },
+          { text: 'Encaisser quand même', style: 'destructive', onPress: () => void completeSale() },
+        ],
+      );
+      return;
+    }
+
+    void completeSale();
   };
 
   return (
