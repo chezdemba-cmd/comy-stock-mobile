@@ -89,3 +89,29 @@ export async function createShop(input: CreateShopInput): Promise<Shop> {
   if (error) throw error;
   return data as Shop;
 }
+
+export async function updateCompanySettings(companyId: string, input: CreateCompanyInput): Promise<Company> {
+  const { data, error } = await supabase.rpc('update_company_settings', {
+    p_company_id: companyId,
+    p_name: input.name,
+    p_country: input.country,
+    p_city: input.city,
+    p_currency: input.currency,
+    p_business_type: input.businessType,
+  }).single();
+  if (error) throw error;
+  return data as Company;
+}
+
+export async function updateShopSettings(shopId: string, input: CreateShopInput): Promise<Shop> {
+  const { data, error } = await supabase.rpc('update_shop_settings', {
+    p_company_id: input.companyId,
+    p_shop_id: shopId,
+    p_name: input.name,
+    p_location: input.location,
+    p_phone: input.phone,
+    p_address: input.address ?? '',
+  }).single();
+  if (error) throw error;
+  return data as Shop;
+}

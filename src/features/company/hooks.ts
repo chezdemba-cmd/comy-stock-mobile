@@ -8,6 +8,8 @@ import {
   createShop,
   fetchCompanyShops,
   fetchMyMemberships,
+  updateCompanySettings,
+  updateShopSettings,
   type CreateCompanyInput,
   type CreateShopInput,
 } from './api';
@@ -61,6 +63,31 @@ export function useCreateShop() {
     onSuccess: (_shop, input) => {
       queryClient.invalidateQueries({ queryKey: myMembershipsKey(userId) });
       queryClient.invalidateQueries({ queryKey: ['companyShops', input.companyId] });
+    },
+  });
+}
+
+export function useUpdateCompanySettings() {
+  const queryClient = useQueryClient();
+  const userId = useAuthStore((state) => state.session?.user.id);
+  const companyId = useCompanyStore((state) => state.activeCompanyId);
+  return useMutation({
+    mutationFn: (input: CreateCompanyInput) => updateCompanySettings(companyId as string, input),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: myMembershipsKey(userId) }),
+  });
+}
+
+export function useUpdateShopSettings() {
+  const queryClient = useQueryClient();
+  const userId = useAuthStore((state) => state.session?.user.id);
+  const companyId = useCompanyStore((state) => state.activeCompanyId);
+  const shopId = useCompanyStore((state) => state.activeShopId);
+  return useMutation({
+    mutationFn: (input: Omit<CreateShopInput, 'companyId'>) =>
+      updateShopSettings(shopId as string, { ...input, companyId: companyId as string }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: myMembershipsKey(userId) });
+      queryClient.invalidateQueries({ queryKey: ['companyShops', companyId] });
     },
   });
 }

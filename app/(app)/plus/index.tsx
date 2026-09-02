@@ -19,6 +19,7 @@ const MENU_ITEMS = [
   { label: 'Abonnement', icon: 'star-outline' as const, href: '/(app)/plus/subscription' as const },
   { label: 'Synchronisation', icon: 'sync-outline' as const, href: '/(app)/plus/sync-queue' as const },
   { label: 'Notifications', icon: 'notifications-outline' as const, href: '/(app)/plus/notifications' as const },
+  { label: 'Entreprise et boutique', icon: 'business-outline' as const, href: '/(app)/plus/business-settings' as const },
 ];
 
 export default function PlusScreen() {
@@ -38,7 +39,11 @@ export default function PlusScreen() {
         <Text style={styles.title}>{t('nav.more')}</Text>
 
         <View style={styles.menu}>
-          {MENU_ITEMS.filter((item) => item.label !== 'Notifications' || role === 'owner' || role === 'accountant').map((item) => (
+          {MENU_ITEMS.filter((item) => {
+            if (item.label === 'Notifications') return role === 'owner' || role === 'accountant';
+            if (item.label === 'Entreprise et boutique') return role === 'owner' || role === 'manager' || role === 'accountant';
+            return true;
+          }).map((item) => (
             <Pressable key={item.href} style={styles.menuItem} onPress={() => router.push(item.href)}>
               <View style={styles.menuIcon}>
                 <Ionicons name={item.icon} size={18} color={colors.green} />
