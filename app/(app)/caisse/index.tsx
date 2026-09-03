@@ -15,7 +15,7 @@ import { useOpenCashSession, useOpenSession } from '@/features/pos/hooks';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useCartStore, cartSubtotal } from '@/stores/cartStore';
 import { useCompanyStore } from '@/stores/companyStore';
-import { formatMoney } from '@/utils/money';
+import { formatMoney, formatNumber } from '@/utils/money';
 
 export default function CaisseScreen() {
   const { data: session, isLoading } = useOpenSession();
@@ -133,7 +133,7 @@ function PosScreen() {
             </Text>
             <Text style={styles.productPrice}>{formatMoney(item.sale_price, currency)}</Text>
             <Text style={styles.productStock}>
-              {item.quantity} {item.unit}
+              {formatNumber(item.quantity)} {item.unit}
             </Text>
           </Pressable>
         )}
@@ -149,7 +149,7 @@ function PosScreen() {
       {itemCount > 0 ? (
         <Pressable style={styles.cartBar} onPress={() => router.push('/(app)/caisse/cart')}>
           <Text style={styles.cartBarLabel}>
-            {itemCount} article{itemCount > 1 ? 's' : ''}
+            {formatNumber(itemCount)} article{itemCount > 1 ? 's' : ''}
           </Text>
           <Text style={styles.cartBarTotal}>{formatMoney(total, currency)}</Text>
           <Ionicons name="arrow-forward" size={18} color={colors.textOnWhite} />

@@ -10,6 +10,7 @@ import { useActiveCompanyRole, useMyMemberships } from '@/features/company/hooks
 import { useSubscriptionUsage } from '@/features/subscription/hooks';
 import { useCompanyStore } from '@/stores/companyStore';
 import type { PlanTier } from '@/types/database';
+import { formatNumber } from '@/utils/money';
 import { buildUpgradeRequestMessage, buildWhatsAppUrl } from '@/utils/whatsapp';
 
 function UsageBar({ label, used, max }: { label: string; used: number; max: number | null }) {
@@ -18,7 +19,9 @@ function UsageBar({ label, used, max }: { label: string; used: number; max: numb
     <View style={styles.usageRow}>
       <View style={styles.usageHeader}>
         <Text style={styles.usageLabel}>{label}</Text>
-        <Text style={styles.usageValue}>{max === null ? `${used} · illimité` : `${used} / ${max}`}</Text>
+        <Text style={styles.usageValue}>
+          {max === null ? `${formatNumber(used)} · illimité` : `${formatNumber(used)} / ${formatNumber(max)}`}
+        </Text>
       </View>
       {max !== null ? (
         <View style={styles.usageTrack}>

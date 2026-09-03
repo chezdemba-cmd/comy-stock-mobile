@@ -13,7 +13,7 @@ import { useMyMemberships } from '@/features/company/hooks';
 import { useDailyRevenue, useSalesSummary } from '@/features/reports/hooks';
 import { getPeriodRange, periodPresetOptions, type DateRange, type PeriodPreset } from '@/features/reports/periods';
 import { useCompanyStore } from '@/stores/companyStore';
-import { formatMoney } from '@/utils/money';
+import { formatMoney, formatNumber } from '@/utils/money';
 
 export default function ReportsScreen() {
   const [preset, setPreset] = useState<PeriodPreset | 'custom'>('today');
@@ -95,7 +95,7 @@ export default function ReportsScreen() {
             value={formatMoney(summary?.net_profit ?? 0, currency)}
             tone={(summary?.net_profit ?? 0) >= 0 ? 'success' : 'danger'}
           />
-          <SummaryTile label="Ventes" value={String(summary?.sales_count ?? 0)} />
+          <SummaryTile label="Ventes" value={formatNumber(summary?.sales_count ?? 0)} />
           <SummaryTile label="Panier moyen" value={formatMoney(summary?.average_basket ?? 0, currency)} />
         </View>
 

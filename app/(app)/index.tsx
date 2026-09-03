@@ -15,7 +15,7 @@ import type { OperationKind } from '@/features/dashboard/types';
 import { useMyMemberships } from '@/features/company/hooks';
 import { useCompanyStore } from '@/stores/companyStore';
 import { colors, radii, spacing, typography } from '@/constants/theme';
-import { formatMoney } from '@/utils/money';
+import { formatMoney, formatNumber } from '@/utils/money';
 
 const OPERATION_ICON: Record<OperationKind, keyof typeof Ionicons.glyphMap> = {
   sale: 'cart',
@@ -70,7 +70,7 @@ export default function DashboardScreen() {
 
         <Text style={styles.sectionTitle}>Aujourd&apos;hui</Text>
         <View style={styles.statsGrid}>
-          <StatCard icon="cart" label="Ventes" value={String(data.salesCount)} />
+          <StatCard icon="cart" label="Ventes" value={formatNumber(data.salesCount)} />
           <StatCard icon="wallet" label="Dépenses" value={formatMoney(data.expensesToday, currency)} />
           <StatCard icon="trending-up" label="Bénéfice" value={formatMoney(data.profitEstimate, currency)} />
           <StatCard icon="pricetag" label="Panier moyen" value={formatMoney(averageBasket, currency)} />
@@ -78,17 +78,17 @@ export default function DashboardScreen() {
 
         <Text style={styles.sectionTitle}>Stock</Text>
         <View style={styles.statsGrid}>
-          <StatCard icon="checkmark-circle" label="Disponibles" value={String(data.stock.available)} />
+          <StatCard icon="checkmark-circle" label="Disponibles" value={formatNumber(data.stock.available)} />
           <StatCard
             icon="alert-circle"
             label="Stock faible"
-            value={String(data.stock.low)}
+            value={formatNumber(data.stock.low)}
             tone="warning"
           />
           <StatCard
             icon="close-circle"
             label="Rupture"
-            value={String(data.stock.outOfStock)}
+            value={formatNumber(data.stock.outOfStock)}
             tone="danger"
           />
         </View>

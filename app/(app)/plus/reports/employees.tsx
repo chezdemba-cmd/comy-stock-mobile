@@ -11,7 +11,7 @@ import { useMyMemberships } from '@/features/company/hooks';
 import { useEmployeeSales } from '@/features/reports/hooks';
 import { getPeriodRange } from '@/features/reports/periods';
 import { useCompanyStore } from '@/stores/companyStore';
-import { formatMoney } from '@/utils/money';
+import { formatMoney, formatNumber } from '@/utils/money';
 
 export default function EmployeeReportsScreen() {
   const params = useLocalSearchParams<{ from?: string; to?: string }>();
@@ -58,7 +58,7 @@ export default function EmployeeReportsScreen() {
                 key={row.employee_id}
                 icon="person-outline"
                 title={row.employee_name}
-                subtitle={`${row.sales_count} vente(s)${row.total_discounts > 0 ? ` · ${formatMoney(row.total_discounts, currency)} de remises` : ''}`}
+                subtitle={`${formatNumber(row.sales_count)} vente(s)${row.total_discounts > 0 ? ` · ${formatMoney(row.total_discounts, currency)} de remises` : ''}`}
                 trailingTop={formatMoney(row.revenue, currency)}
                 trailingTone="success"
               />

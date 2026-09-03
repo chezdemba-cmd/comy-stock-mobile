@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { colors, radii, spacing, typography } from '@/constants/theme';
 import type { CartItem } from '@/stores/cartStore';
-import { formatMoney } from '@/utils/money';
+import { formatMoney, formatNumber } from '@/utils/money';
 
 interface CartLineItemProps {
   item: CartItem;
@@ -27,7 +27,7 @@ export function CartLineItem({ item, currency, onIncrement, onDecrement, onRemov
         <Pressable style={styles.stepButton} onPress={onDecrement}>
           <Ionicons name="remove" size={16} color={colors.textPrimary} />
         </Pressable>
-        <Text style={styles.quantity}>{item.quantity}</Text>
+        <Text style={styles.quantity}>{formatNumber(item.quantity)}</Text>
         <Pressable style={styles.stepButton} onPress={onIncrement}>
           <Ionicons name="add" size={16} color={colors.textPrimary} />
         </Pressable>

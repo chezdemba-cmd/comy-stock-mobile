@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors, radii, spacing, typography } from '@/constants/theme';
 import { getStockStatus } from '@/features/products/stockStatus';
 import type { ProductWithStock } from '@/features/products/api';
-import { formatMoney } from '@/utils/money';
+import { formatMoney, formatNumber } from '@/utils/money';
 import { StockBadge } from './StockBadge';
 
 interface ProductCardProps {
@@ -41,7 +41,7 @@ export function ProductCard({ product, currency, onPress }: ProductCardProps) {
       <View style={styles.trailing}>
         <StockBadge status={status} />
         <Text style={styles.quantity}>
-          {product.quantity} {product.unit}
+          {formatNumber(product.quantity)} {product.unit}
         </Text>
       </View>
     </Pressable>

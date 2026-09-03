@@ -2,7 +2,7 @@ import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 
 import type { SaleReceipt } from './api';
-import { formatMoney } from '@/utils/money';
+import { formatMoney, formatNumber } from '@/utils/money';
 
 const PAYMENT_LABEL: Record<string, string> = {
   cash: 'Espèces',
@@ -38,7 +38,7 @@ export function buildReceiptHtml(receipt: SaleReceipt, shopName: string, currenc
       (item) => `
         <tr>
           <td>${escapeHtml(item.product_name)}</td>
-          <td style="text-align:center">${item.quantity}</td>
+          <td style="text-align:center">${formatNumber(item.quantity)}</td>
           <td style="text-align:right">${formatMoneyHtml(item.unit_price, currency)}</td>
           <td style="text-align:right">${formatMoneyHtml(item.line_total, currency)}</td>
         </tr>`

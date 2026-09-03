@@ -8,12 +8,12 @@ const CURRENCY_SUFFIX: Record<string, string> = {
   USD: '$',
 };
 
-function groupThousands(value: number): string {
+export function formatNumber(value: number): string {
   const rounded = Math.round(value);
   return new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(rounded);
 }
 
 export function formatMoney(amount: number, currencyCode: string): string {
   const suffix = CURRENCY_SUFFIX[currencyCode] ?? currencyCode;
-  return `${groupThousands(amount)} ${suffix}`;
+  return `${formatNumber(amount)} ${suffix}`;
 }

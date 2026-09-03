@@ -33,7 +33,7 @@ import { getStockStatus } from '@/features/products/stockStatus';
 import { useSupplier } from '@/features/suppliers/hooks';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useCompanyStore } from '@/stores/companyStore';
-import { formatMoney } from '@/utils/money';
+import { formatMoney, formatNumber } from '@/utils/money';
 
 const MOVEMENT_LABEL: Record<string, string> = {
   entry: 'Entrée',
@@ -139,7 +139,7 @@ export default function ProductDetailScreen() {
           <View style={styles.statCard}>
             <Text style={styles.statLabel}>Stock actuel</Text>
             <Text style={styles.statValue}>
-              {product.quantity} {product.unit}
+              {formatNumber(product.quantity)} {product.unit}
             </Text>
           </View>
           <View style={styles.statCard}>
@@ -187,7 +187,7 @@ export default function ProductDetailScreen() {
                 iconTone={movement.quantity_change >= 0 ? 'success' : 'danger'}
                 title={MOVEMENT_LABEL[movement.type] ?? movement.type}
                 subtitle={movement.reason ?? undefined}
-                trailingTop={`${movement.quantity_change > 0 ? '+' : ''}${movement.quantity_change}`}
+                trailingTop={`${movement.quantity_change > 0 ? '+' : ''}${formatNumber(movement.quantity_change)}`}
                 trailingBottom={new Date(movement.created_at).toLocaleDateString('fr-FR')}
                 trailingTone={movement.quantity_change >= 0 ? 'success' : 'danger'}
               />

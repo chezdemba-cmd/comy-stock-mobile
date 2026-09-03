@@ -12,7 +12,7 @@ import { useMyMemberships } from '@/features/company/hooks';
 import { useProductSales } from '@/features/reports/hooks';
 import { getPeriodRange } from '@/features/reports/periods';
 import { useCompanyStore } from '@/stores/companyStore';
-import { formatMoney } from '@/utils/money';
+import { formatMoney, formatNumber } from '@/utils/money';
 
 export default function ProductReportsScreen() {
   const params = useLocalSearchParams<{ from?: string; to?: string }>();
@@ -78,7 +78,7 @@ export default function ProductReportsScreen() {
               icon="trending-up"
               iconTone="success"
               title={row.product_name}
-              subtitle={`${row.quantity_sold} vendu(s)`}
+              subtitle={`${formatNumber(row.quantity_sold)} vendu(s)`}
               trailingTop={formatMoney(row.revenue, currency)}
               trailingBottom={`Marge ${formatMoney(row.margin, currency)}`}
               trailingTone="success"
@@ -94,7 +94,7 @@ export default function ProductReportsScreen() {
               icon="trending-down"
               iconTone="warning"
               title={row.product_name}
-              subtitle={`${row.quantity_sold} vendu(s)`}
+              subtitle={`${formatNumber(row.quantity_sold)} vendu(s)`}
               trailingTop={formatMoney(row.revenue, currency)}
               trailingTone="default"
             />

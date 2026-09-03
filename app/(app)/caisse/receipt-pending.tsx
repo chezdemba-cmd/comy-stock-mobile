@@ -9,7 +9,7 @@ import { colors, radii, spacing, typography } from '@/constants/theme';
 import { useMyMemberships } from '@/features/company/hooks';
 import { useCompanyStore } from '@/stores/companyStore';
 import { useSyncQueueStore } from '@/stores/syncQueueStore';
-import { formatMoney } from '@/utils/money';
+import { formatMoney, formatNumber } from '@/utils/money';
 
 export default function ReceiptPendingScreen() {
   const { t } = useTranslation();
@@ -43,7 +43,7 @@ export default function ReceiptPendingScreen() {
             {sale.items.map((line) => (
               <View key={line.productId} style={styles.itemRow}>
                 <Text style={styles.itemName} numberOfLines={1}>
-                  {line.quantity} × {line.name}
+                  {formatNumber(line.quantity)} × {line.name}
                 </Text>
                 <Text style={styles.itemTotal}>{formatMoney(line.unitPrice * line.quantity, currency)}</Text>
               </View>

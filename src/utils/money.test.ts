@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatMoney } from './money';
+import { formatMoney, formatNumber } from './money';
+
+describe('formatNumber', () => {
+  it('sépare les milliers selon le format français', () => {
+    expect(formatNumber(1000)).toBe('1\u202f000');
+    expect(formatNumber(10000)).toBe('10\u202f000');
+  });
+});
 
 describe('formatMoney', () => {
   it('formate le franc CFA utilisé au Mali sans décimales', () => {

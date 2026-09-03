@@ -13,7 +13,7 @@ import { useProducts } from '@/features/products/hooks';
 import { cartSubtotal, useCartStore } from '@/stores/cartStore';
 import { useCompanyStore } from '@/stores/companyStore';
 import type { PaymentMethod } from '@/types/database';
-import { formatMoney } from '@/utils/money';
+import { formatMoney, formatNumber } from '@/utils/money';
 
 interface PaymentLine {
   method: PaymentMethod;
@@ -114,7 +114,10 @@ export default function PaymentScreen() {
     if (insufficientItems.length > 0) {
       const details = insufficientItems
         .slice(0, 5)
-        .map((item) => `${item.name} : demandé ${item.quantity}, disponible ${stockByProduct.get(item.productId) ?? 0}`)
+        .map(
+          (item) =>
+            `${item.name} : demandé ${formatNumber(item.quantity)}, disponible ${formatNumber(stockByProduct.get(item.productId) ?? 0)}`,
+        )
         .join('\n');
       Alert.alert(
         'Stock insuffisant',

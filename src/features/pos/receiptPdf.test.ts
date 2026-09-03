@@ -6,6 +6,7 @@ vi.mock('expo-print', () => ({ printToFileAsync: vi.fn(), printAsync: vi.fn() })
 vi.mock('expo-sharing', () => ({ isAvailableAsync: vi.fn(), shareAsync: vi.fn() }));
 vi.mock('@/utils/money', () => ({
   formatMoney: (amount: number, currency: string) => `${amount.toLocaleString('fr-FR')} ${currency}`,
+  formatNumber: (value: number) => value.toLocaleString('fr-FR'),
 }));
 
 const receipt = {

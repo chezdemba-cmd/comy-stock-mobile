@@ -11,7 +11,7 @@ import { useMyMemberships } from '@/features/company/hooks';
 import { useSaleReceipt } from '@/features/pos/hooks';
 import { buildReceiptHtml, printReceipt, shareReceiptPdf } from '@/features/pos/receiptPdf';
 import { useCompanyStore } from '@/stores/companyStore';
-import { formatMoney } from '@/utils/money';
+import { formatMoney, formatNumber } from '@/utils/money';
 
 const PAYMENT_LABEL: Record<string, string> = {
   cash: 'Espèces',
@@ -58,7 +58,7 @@ export default function ReceiptScreen() {
             {receipt.items.map((item) => (
               <View key={item.id} style={styles.itemRow}>
                 <Text style={styles.itemName} numberOfLines={1}>
-                  {item.quantity} × {item.product_name}
+                  {formatNumber(item.quantity)} × {item.product_name}
                 </Text>
                 <Text style={styles.itemTotal}>{formatMoney(item.line_total, currency)}</Text>
               </View>
