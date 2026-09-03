@@ -7,7 +7,7 @@ import { useOpenSession } from '@/features/pos/hooks';
 import { useSalesSummary } from '@/features/reports/hooks';
 import { getPeriodRange } from '@/features/reports/periods';
 import { useCompanyStore } from '@/stores/companyStore';
-import { formatMoney } from '@/utils/money';
+import { formatMoney, formatNumber } from '@/utils/money';
 import { fetchRecentOperations } from './api';
 import type { DashboardSummary } from './types';
 
@@ -50,14 +50,14 @@ export function useDashboardData(currency: string): { data: DashboardSummary; is
   if (stock.low > 0) {
     alerts.push({
       id: 'stock-low',
-      message: `${stock.low} produit${stock.low > 1 ? 's' : ''} bientôt en rupture`,
+      message: `${formatNumber(stock.low)} produit${stock.low > 1 ? 's' : ''} bientôt en rupture`,
       severity: 'warning',
     });
   }
   if (stock.outOfStock > 0) {
     alerts.push({
       id: 'stock-out',
-      message: `${stock.outOfStock} produit${stock.outOfStock > 1 ? 's' : ''} en rupture`,
+      message: `${formatNumber(stock.outOfStock)} produit${stock.outOfStock > 1 ? 's' : ''} en rupture`,
       severity: 'danger',
     });
   }

@@ -9,6 +9,7 @@ import { signOut } from '@/features/auth/signOut';
 import { useNotifications } from '@/features/notifications/hooks';
 import { useActiveCompanyRole } from '@/features/company/hooks';
 import { colors, radii, spacing, typography } from '@/constants/theme';
+import { formatNumber } from '@/utils/money';
 
 const MENU_ITEMS = [
   { label: 'Clients', icon: 'people-outline' as const, href: '/(app)/plus/clients' as const },
@@ -50,7 +51,7 @@ export default function PlusScreen() {
               </View>
               <Text style={styles.menuLabel}>
                 {item.label === 'Notifications' && unreadNotifications > 0
-                  ? `${item.label} (${unreadNotifications})`
+                  ? `${item.label} (${formatNumber(unreadNotifications)})`
                   : item.label}
               </Text>
               <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />

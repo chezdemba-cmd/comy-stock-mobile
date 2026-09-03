@@ -46,7 +46,7 @@ Le numéro de support doit utiliser le format international malien sans `+` ni e
 
 ## Base de données Supabase
 
-Les migrations versionnées sont dans `supabase/migrations`. Pour un nouveau projet, les appliquer dans l'ordre, de `0001` à `0010`, avec la CLI Supabase ou le tableau de bord SQL.
+Les migrations versionnées sont dans `supabase/migrations`. Pour un nouveau projet, les appliquer dans l'ordre, de `0001` à `0016`, avec la CLI Supabase ou le tableau de bord SQL.
 
 Avant toute mise en production, vérifier que les migrations distantes sont à jour et tester les politiques RLS avec chaque rôle applicatif.
 
@@ -55,6 +55,7 @@ Avant toute mise en production, vérifier que les migrations distantes sont à j
 La fonction se trouve dans `supabase/functions/comy-ai`. Son environnement serveur doit contenir :
 
 - `ANTHROPIC_API_KEY` ;
+- `ANTHROPIC_WORKSPACE_ID` pour une clé Anthropic liée à une identité ;
 - `SUPABASE_URL` ;
 - `SUPABASE_ANON_KEY`.
 
