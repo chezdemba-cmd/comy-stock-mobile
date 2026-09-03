@@ -22,6 +22,8 @@ const MENU_ITEMS = [
   { label: 'Notifications', icon: 'notifications-outline' as const, href: '/(app)/plus/notifications' as const },
   { label: 'Entreprise et boutique', icon: 'business-outline' as const, href: '/(app)/plus/business-settings' as const },
   { label: 'Mon compte', icon: 'person-circle-outline' as const, href: '/(app)/plus/account' as const },
+  { label: 'Confidentialité', icon: 'shield-checkmark-outline' as const, href: '/(app)/plus/privacy' as const },
+  { label: "Conditions d'utilisation", icon: 'document-text-outline' as const, href: '/(app)/plus/terms' as const },
 ];
 
 export default function PlusScreen() {

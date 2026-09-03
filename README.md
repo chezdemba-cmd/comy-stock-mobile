@@ -100,6 +100,6 @@ Pour activer les source maps, définir `SENTRY_ORG` et `SENTRY_PROJECT` dans l'e
 Avant soumission aux stores :
 
 - tester caméra, scan, PDF, partage, liens d'authentification et mode hors ligne sur appareils réels ;
-- ajouter une politique de confidentialité, des conditions d'utilisation et un parcours de suppression de compte ;
+- publier sur une URL web publique la politique de confidentialité et le formulaire externe de suppression de compte ;
 - valider les sauvegardes Supabase et la supervision Sentry ;
 - préparer les captures, descriptions et coordonnées de support des stores.
