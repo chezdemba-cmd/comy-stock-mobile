@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Paiement Comy Stock</title>
+    <style>
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #15171a; color: #f2f8f5; font-family: system-ui, sans-serif; }
+      main { width: min(88%, 430px); padding: 32px; border: 1px solid rgba(34,160,107,.35); border-radius: 24px; background: #1e2124; text-align: center; }
+      h1 { margin-top: 0; } p { color: #aab3b0; line-height: 1.55; } .ok { color: #22a06b; } .error { color: #e8c46a; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1 id="title">Paiement reçu</h1>
+      <p id="message">Retournez dans Comy Stock. La formule sera activée dès que l'opérateur aura confirmé le paiement.</p>
+    </main>
+    <script>
+      const success = new URLSearchParams(location.search).get('status') === 'success';
+      document.getElementById('title').textContent = success ? 'Paiement envoyé' : 'Paiement non terminé';
+      document.getElementById('title').className = success ? 'ok' : 'error';
+      document.getElementById('message').textContent = success
+        ? "Retournez dans Comy Stock. L'activation sera automatique après confirmation de l'opérateur."
+        : "Le paiement n'a pas été confirmé. Vous pouvez retourner dans Comy Stock et réessayer.";
+    </script>
+  </body>
+</html>

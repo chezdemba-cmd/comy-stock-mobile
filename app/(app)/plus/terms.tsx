@@ -42,7 +42,7 @@ const sections: LegalSectionData[] = [
   {
     title: '7. Formules et paiement',
     paragraphs: [
-      "Les limites et prix des formules sont indiqués dans l'application. Une demande de changement de formule peut être initiée via WhatsApp. Les modalités de paiement et d'activation sont confirmées avant toute modification payante.",
+      "Les limites et prix des formules sont indiqués dans l'application. Le paiement peut être réalisé avec les moyens locaux proposés. Une formule payante est activée uniquement après confirmation sécurisée du paiement par l'opérateur.",
     ],
   },
   {

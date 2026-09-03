@@ -19,6 +19,7 @@ export interface Company {
   currency: string;
   business_type: string;
   plan: PlanTier;
+  plan_expires_at?: string | null;
   created_by: string;
   created_at: string;
   updated_at: string;
@@ -387,4 +388,20 @@ export interface SubscriptionUsage {
   ai_used: number;
   ai_max: number;
   ai_period: 'day' | 'month';
+}
+
+export type SubscriptionPaymentProvider = 'wave' | 'orange_money' | 'moov_money';
+export type SubscriptionBillingCycle = 'monthly' | 'yearly';
+
+export interface SubscriptionPaymentOrder {
+  id: string;
+  company_id: string;
+  target_plan: Exclude<PlanTier, 'free'>;
+  billing_cycle: SubscriptionBillingCycle;
+  provider: SubscriptionPaymentProvider;
+  amount: number;
+  currency: 'XOF';
+  status: 'pending' | 'processing' | 'succeeded' | 'failed' | 'expired';
+  created_at: string;
+  paid_at: string | null;
 }
