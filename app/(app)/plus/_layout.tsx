@@ -31,6 +31,7 @@ export default function PlusLayout() {
       <Stack.Screen name="subscription" options={{ title: 'Abonnement' }} />
       <Stack.Screen name="notifications" options={{ title: 'Notifications' }} />
       <Stack.Screen name="business-settings" options={{ title: 'Entreprise et boutique' }} />
+      <Stack.Screen name="account" options={{ title: 'Mon compte' }} />
       <Stack.Screen name="team/[userId]" options={{ title: 'Gérer le membre' }} />
     </Stack>
   );

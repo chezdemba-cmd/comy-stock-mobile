@@ -21,6 +21,7 @@ const MENU_ITEMS = [
   { label: 'Synchronisation', icon: 'sync-outline' as const, href: '/(app)/plus/sync-queue' as const },
   { label: 'Notifications', icon: 'notifications-outline' as const, href: '/(app)/plus/notifications' as const },
   { label: 'Entreprise et boutique', icon: 'business-outline' as const, href: '/(app)/plus/business-settings' as const },
+  { label: 'Mon compte', icon: 'person-circle-outline' as const, href: '/(app)/plus/account' as const },
 ];
 
 export default function PlusScreen() {
